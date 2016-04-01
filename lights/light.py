@@ -1,4 +1,6 @@
 
+from lights.light_state import LightState, RGBColor
+
 class Light(object):
     """
     Base class for the representation of a single light. This is a mostly a
@@ -7,6 +9,7 @@ class Light(object):
     Each instance of this class corresponds to a single physical light unit
     (LED or set of LEDs which always have the same light configuration).
     """
+    STATE_TYPE = LightState
 
     def __init__(self, id):
         self._id = id
@@ -23,8 +26,11 @@ class Light(object):
         """
         The state of the physical light unit.
         """
-        raise NotImplementedError()
+        return self._state
 
     @state.setter
     def state(self, state):
-        raise NotImplementedError()
+        if not isinstance(state, self.STATE_TYPE):
+            raise TypeError("This light's state should be a {}". \
+                format(self.STATE_TYPE))
+        self._state = state
