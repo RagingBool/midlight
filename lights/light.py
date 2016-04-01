@@ -1,6 +1,7 @@
 
 from lights.light_state import LightState, RGBColor
 
+
 class Light(object):
     """
     Base class for the representation of a single light. This is a mostly a
@@ -34,3 +35,7 @@ class Light(object):
             raise TypeError("This light's state should be a {}". \
                 format(self.STATE_TYPE))
         self._state = state
+
+
+class RGBLight(Light):
+    STATE_TYPE = RGBColor
