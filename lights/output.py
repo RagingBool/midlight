@@ -1,4 +1,6 @@
 
+from lights.light import Light
+
 class OutputDevice(object):
     """
     Base class for output devices. These are responsible for serializing the
@@ -20,10 +22,15 @@ class DebugOutputDevice(OutputDevice):
     """
     
     def __init__(self, lights):
+        lights = list(lights)
+        for light in lights:
+            if not isinstance(light, Light):
+                raise TypeError("All elements in collection should be Light " \
+                    "objects")
         self._lights = lights
 
     def emit(self):
         print("Current state:")
-        for i, light in enumerate(self._lights):
-            print("Light {}: {}".format(i, light.state))
+        for light in self._lights:
+            print("{}: {}".format(light, light.state))
         print()
