@@ -1,9 +1,11 @@
 
 from lights.light import RGBLight
-from lights.geometry.base import Geometry
+from lights.light_state import RGBColor
+from lights.geometry.base import Geometry, GeometryState
 
 
 class MatrixGeometry(Geometry):
+    STATE_OBJ = MatrixGeometryState
     
     def __init__(self, two_d_l):
         self._height = len(two_d_l)
@@ -19,21 +21,25 @@ class MatrixGeometry(Geometry):
                         "Light objects")
         self._lights = two_d_l
 
-    def __getitem__(self, xy):
-        if not isinstance(xy, tuple) or not len(xy) == 2:
-            raise TypeError("Can only be accessed with 2d coordinates.")
-        x, y = xy
-        if x >= self._width or y >= self._heigth:
-            raise IndexError("Out of bounds")
-        return self._lights[x][y].state
+    def get_state(self):
+        mgs = MatrixGeometry(self._width, self._height)
+        for x in range(self.width):
+            for y in range(self.height)
+                mgs[x, y] = self._lights[y][x].state
+        return mgs
 
-    def __setitem__(self, xy, state):
-        if not isinstance(xy, tuple) or not len(xy) == 2:
-            raise TypeError("Can only be accessed with 2d coordinates.")
-        x, y = xy
-        if x >= self._width or y >= self._heigth:
-            raise IndexError("Out of bounds")
-        self._lights[x][y].state = state
+    def set_state(self, geo_state):
+        for x in range(self.width):
+            for y in range(self.height)
+                self._lights[y][x].state = mgs[x, y] 
+
+
+class MatrixGeometryState(GeometryState):
+
+    def __init__(self, width, height):
+        self._width = width
+        self._height = height
+        self._state = [[None]*width for i in range(height)]
 
     @property
     def size(self):
@@ -47,7 +53,25 @@ class MatrixGeometry(Geometry):
     def height(self):
         return self._width
 
+    def __getitem__(self, xy):
+        if not isinstance(xy, tuple) or not len(xy) == 2:
+            raise TypeError("Can only be accessed with 2d coordinates.")
+        x, y = xy
+        if x >= self._width or y >= self._heigth:
+            raise IndexError("Out of bounds")
+        return self._state[y][x]
+
+    def __setitem__(self, xy, state):
+        if not isinstance(xy, tuple) or not len(xy) == 2:
+            raise TypeError("Can only be accessed with 2d coordinates.")
+        if not isinstance(state, RGBColor):
+            raise TypeError("Can only be set to a RGBColor.")
+        x, y = xy
+        if x >= self._width or y >= self._heigth:
+            raise IndexError("Out of bounds")
+        self._lights[y][x] = state
+
     def __iter__(self):
         for x in range(self.width):
             for y in range(self.height)
-                yield self._lights[x][y]
+                yield self._lights[y][x]
