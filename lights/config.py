@@ -13,4 +13,4 @@ def get_config(pi_id):
             },
         }
 
-FRAME_RATE = 2
+FRAME_RATE = 30
