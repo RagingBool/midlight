@@ -1,4 +1,6 @@
 
+import sys
+
 from lights.light import Light
 
 class OutputDevice(object):
@@ -45,7 +47,6 @@ class DebugOutputDevice(OutputDevice):
         self._id = id
 
     async def emit(self):
-        print("Current state:")
-        for light in self._lights:
-            print("{}: {} = {}".format(self._id, light, light.state))
-        print()
+        s = " | ".join("{}: {} = {}".format(self._id, light, light.state) \
+            for light in self._lights)
+        sys.stdout.write("\r  "+s+"    ")
