@@ -21,16 +21,17 @@ class DebugOutputDevice(OutputDevice):
     Output device for debug purposes - prints the current state of the lights.
     """
     
-    def __init__(self, lights):
+    def __init__(self, id, lights):
         lights = list(lights)
         for light in lights:
             if not isinstance(light, Light):
                 raise TypeError("All elements in collection should be Light " \
                     "objects")
         self._lights = lights
+        self._id = id
 
     def emit(self):
         print("Current state:")
         for light in self._lights:
-            print("{}: {}".format(light, light.state))
+            print("{}: {} = {}".format(self._id, light, light.state))
         print()
