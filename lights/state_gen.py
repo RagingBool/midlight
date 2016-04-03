@@ -1,6 +1,8 @@
 
 import time
 
+from lights.config import FRAME_RATE
+
 DELTA = "DELTA"
 
 class _StateGen(object):
@@ -31,4 +33,4 @@ class _StateGen(object):
             DELTA: delta,
         }
 
-StateGen = _StateGen()
+STATE_GEN = _StateGen(FRAME_RATE)
