@@ -103,3 +103,11 @@ class to_aiter(object):
             next(self._it)
         except StopIteration:
             raise StopAsyncIteration()
+
+
+async def consume(aiter):
+    """
+    Consume an aiter.
+    """
+    async for i in aiter:
+        pass
