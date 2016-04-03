@@ -5,7 +5,8 @@ from lights.geometry.base import Geometry, GeometryState
 
 
 class MatrixGeometry(Geometry):
-    STATE_OBJ = MatrixGeometryState
+
+    STATE_CLS = MatrixGeometryState
     
     def __init__(self, two_d_l):
         self._height = len(two_d_l)
@@ -21,14 +22,14 @@ class MatrixGeometry(Geometry):
                         "Light objects")
         self._lights = two_d_l
 
-    def get_state(self):
+    def _get_state(self):
         mgs = MatrixGeometry(self._width, self._height)
         for x in range(self.width):
             for y in range(self.height)
                 mgs[x, y] = self._lights[y][x].state
         return mgs
 
-    def set_state(self, geo_state):
+    def _set_state(self, geo_state):
         for x in range(self.width):
             for y in range(self.height)
                 self._lights[y][x].state = mgs[x, y] 
