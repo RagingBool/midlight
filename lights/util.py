@@ -89,3 +89,36 @@ def atee(aiterable, n=2):
     ait = [None]
     deques = [collections.deque() for i in range(n)]
     return tuple(_Tee(aiterable, ait, deques, d) for d in deques)
+
+
+class azip(object):
+    """
+    Zip several aiterables together.
+    """
+    def __init__(self, *aiterables):
+        self._aiterables = aiterables
+        self._aits = None
+
+    def __aiter__(self):
+        self._aits = tuple(await aiter(aiterable) for aiterable in aiterables)
+        return self
+
+    def __anext__(self):
+        yield tuple(await anext(ait) for ait in self._aits)
+
+
+class to_aiter(object):
+    """
+    Convert a given aiterable to aiter.
+    """
+    def __init__(self, iterable):
+        self._it = iter(iterable)
+
+    async def __aiter__(self):
+        return self
+
+    async def __anext__(self):
+        try:
+            next(self._it)
+        except StopIteration:
+            raise StopAsyncIteration()
