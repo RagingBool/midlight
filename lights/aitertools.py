@@ -7,7 +7,7 @@ async def aiter(aiterable):
     """
     Run __aiter__ of our aiterable.
     """
-    return await ait.__aiter__()
+    return await aiterable.__aiter__()
 
 
 async def anext(ait):
@@ -80,12 +80,17 @@ class azip(object):
         self._aiterables = aiterables
         self._aits = None
 
-    def __aiter__(self):
-        self._aits = tuple(await aiter(aiterable) for aiterable in aiterables)
+    async def __aiter__(self):
+        self._aits = []
+        for aiterable in self._aiterables:
+            self._aits.append(await aiter(aiterable))
         return self
 
-    def __anext__(self):
-        yield tuple(await anext(ait) for ait in self._aits)
+    async def __anext__(self):
+        vals = []
+        for ait in self._aits:
+            vals.append(await anext(ait))
+        return tuple(vals)
 
 
 class to_aiter(object):
@@ -100,7 +105,7 @@ class to_aiter(object):
 
     async def __anext__(self):
         try:
-            next(self._it)
+            return next(self._it)
         except StopIteration:
             raise StopAsyncIteration()
 

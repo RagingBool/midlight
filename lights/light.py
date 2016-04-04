@@ -14,6 +14,7 @@ class Light(object):
 
     def __init__(self, id):
         self._id = id
+        self._state = self.STATE_TYPE()
 
     def __str__(self):
         return "Light #{}".format(self._id)

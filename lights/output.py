@@ -2,6 +2,7 @@
 import sys
 
 from lights.light import Light
+from lights.aitertools import aiter, anext
 
 class OutputDevice(object):
     """
@@ -14,12 +15,14 @@ class OutputDevice(object):
         self._aits = None
 
     async def __aiter__(self):
-        self._aits = tuple(await aiter(aiterable) for aiterable in \
-            self._upstreams) 
+        self._aits = []
+        for aiterable in self._upstreams:
+            self._aits.append(await aiter(aiterable))
         return self
-    
+
     async def __anext__(self):
-        c = tuple(await anext(ait) for ait in self._aits)
+        for ait in self._aits:
+            await anext(ait)
         await self.emit()
         
     async def emit(self):
@@ -37,7 +40,7 @@ class DebugOutputDevice(OutputDevice):
     """
     
     def __init__(self, id, lights, upstreams):
-        super().__init__(self, upstreams)
+        super().__init__(upstreams)
         lights = list(lights)
         for light in lights:
             if not isinstance(light, Light):

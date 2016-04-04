@@ -35,11 +35,11 @@ class _Filter(object):
         self._filter = iter(filter(self._pop_iter, *args, **kwargs))
 
     async def __aiter__(self):
-        self._ait = await aiter(upstream)
+        self._ait = await aiter(self._upstream)
         return self
 
     async def __anext__(self):
-        geo_state, input_state = await anext(self._ait))
+        geo_state, input_state = await anext(self._ait)
         if not isinstance(geo_state, self._geo_cls) or \
             not isinstance(input_state, dict):
             raise ValueError("Upstream iterator yielded a bad value.")

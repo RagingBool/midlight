@@ -1,5 +1,6 @@
 
 import time
+import asyncio
 
 from lights.config import FRAME_RATE
 
@@ -27,7 +28,7 @@ class _StateGen(object):
             await asyncio.sleep(left)
         rel = time.time() - self._init_t
         delta = rel - self._accu
-        self.accu += delta  # This is to avoid floating error drift.
+        self._accu += delta  # This is to avoid floating error drift.
         self._framecount += 1
         return {
             DELTA: delta,

@@ -1,5 +1,18 @@
 
 
+class GeometryState(object):
+    """
+    Base class for geometries of light states. Corresponds to a Geometry class,
+    and stores the state of lights under the correct geometry.
+    Should always have a __iter__ method for going of all the lights serially.
+    """
+    def __init__(self):
+        raise NotImplementedError()
+
+    def __iter__(self):
+        raise NotImplementedError()
+
+
 class Geometry(object):
     """
     Base class for geometries of light collections. A Geometry object should:
@@ -23,21 +36,8 @@ class Geometry(object):
     def set_state(self, state):
         if not isinstance(state, self.STATE_CLS):
             raise TypeError("Should only set to objects of type {}".format(
-                self.STATE_CLS)
+                self.STATE_CLS))
         self._set_state(state)
 
     def _set_state(self):
-        raise NotImplementedError()
-
-
-class GeometryState(object):
-    """
-    Base class for geometries of light states. Corresponds to a Geometry class,
-    and stores the state of lights under the correct geometry.
-    Should always have a __iter__ method for going of all the lights serially.
-    """
-    def __init__(self):
-        raise NotImplementedError()
-
-    def __iter__(self):
         raise NotImplementedError()
