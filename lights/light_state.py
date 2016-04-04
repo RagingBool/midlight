@@ -31,6 +31,8 @@ class RGBColor(LightState):
             if m is None:
                 raise ValueError("Invalid HTML RGB format")
             self._r, self._g, self._b = (int(x, 16) for x in m.groups())
+        else:
+            self._r, self._g, self._b = 0, 0, 0
 
     @property
     def r(self):
