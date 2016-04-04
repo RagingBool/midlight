@@ -38,13 +38,25 @@ class RGBColor(LightState):
     def r(self):
         return self._r
 
+    @r.setter
+    def r(self, r):
+        self._r = r
+
     @property
     def g(self):
         return self._g
 
+    @g.setter
+    def g(self, g):
+        self._g = g
+
     @property
     def b(self):
         return self._b
+
+    @b.setter
+    def b(self, b):
+        self._b = b
 
     def __iter__(self):
         yield self.r
