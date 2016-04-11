@@ -13,6 +13,7 @@ from lights.state_gen import STATE_GEN
 from lights.geometry.matrix import MatrixGeometry
 from lights.aitertools import to_aiter, atee, azip, consume
 from lights.filters.sample_matrix import sample_filter
+from lights.util import AsyncAppliedFilter
 from lights.output import DebugOutputDevice
 
 def iter_state(obj):
@@ -35,7 +36,7 @@ def main():
         (sample_filter, matrix),
     ]
     state_gens = atee(STATE_GEN, len(filter_and_geos))
-    outs = [f(azip(to_aiter(iter_state(o)), state_gens[i])) for (i,(f,o)) in \
+    outs = [AsyncAppliedFilter(f(), azip(to_aiter(iter_state(o)), state_gens[i])) for (i,(f,o)) in \
         enumerate(filter_and_geos)]
     outss = [atee(o, len(conf["DEBUG"])) for o in outs]
     debug_d = {}
