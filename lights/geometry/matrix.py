@@ -75,4 +75,4 @@ class MatrixGeometry(Geometry):
     def _set_state(self, geo_state):
         for x in range(self._width):
             for y in range(self._height):
-                self._lights[y][x].state = mgs[x, y] 
+                self._lights[y][x].state = geo_state[x, y] 
