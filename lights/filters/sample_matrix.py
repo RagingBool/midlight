@@ -20,4 +20,4 @@ def sample_filter(upstream):
             ind += 1
         light_state[(ind//2)%2, ind%2].r = 0
         light_state[((ind+1)//2)%2, (ind+1)%2].r = 255
-        yield light_state, input_state
+        yield light_state
