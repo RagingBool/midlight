@@ -20,6 +20,21 @@ def iter_state(obj):
     while True:
         yield obj.get_state()
 
+
+async def run(state_gen, geos_and_filters, outs):
+    state_gens = list(atee(STATE_GEN, len(geos_and_filters)))
+    for i, (geo, filters) in enumerate(geos_and_filters):
+        upstream = azip(to_aiter(iter_state(geo)), state_gens[i])
+        for filter in filters:
+            upstream = AsyncAppliedFilter(filter, upstream)
+        state_gens[i] = upstream
+    async for states in azip(*state_gens):
+        for i, (light_state, input_state) in enumerate(states):
+            geos_and_filters[i][0].set_state(light_state)
+        for out in outs:
+            await out.emit()
+
+
 def main():
     conf = get_config(1)
     dl = {}
@@ -31,25 +46,18 @@ def main():
             new_row.append(l)
         matrix_m.append(new_row)
     matrix = MatrixGeometry(matrix_m)
-
-    filter_and_geos = [
-        (sample_filter, matrix),
+    geos_and_filters = [
+        (matrix, (sample_filter(),)),
     ]
-    state_gens = atee(STATE_GEN, len(filter_and_geos))
-    outs = [AsyncAppliedFilter(f(), azip(to_aiter(iter_state(o)), state_gens[i])) for (i,(f,o)) in \
-        enumerate(filter_and_geos)]
-    outss = [atee(o, len(conf["DEBUG"])) for o in outs]
-    debug_d = {}
+    outs = []
     for i, (key, l) in enumerate(conf["DEBUG"].items()):
         new_l = []
         for id in l:
             l = dl.setdefault(id, RGBLight(id))
             new_l.append(l)
-        debug_d[key] = DebugOutputDevice(key, new_l, [os[i] for os in outss])
-    
+        outs.append(DebugOutputDevice(key, new_l))
     el = asyncio.get_event_loop()
-    el.run_until_complete(asyncio.wait(tuple(
-        consume(debug) for debug in debug_d.values())))
+    el.run_until_complete(run(STATE_GEN, geos_and_filters, outs))
 
 if __name__ == "__main__":
     main()
