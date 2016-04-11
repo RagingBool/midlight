@@ -8,23 +8,7 @@ class OutputDevice(object):
     """
     Base class for output devices. These are responsible for serializing the
     light configuration and sending it to the hardware.
-    Should be aiters, which send to hardware on __anext__.
     """
-    def __init__(self, upstreams):
-        self._upstreams = upstreams
-        self._aits = None
-
-    async def __aiter__(self):
-        self._aits = []
-        for aiterable in self._upstreams:
-            self._aits.append(await aiter(aiterable))
-        return self
-
-    async def __anext__(self):
-        for ait in self._aits:
-            await anext(ait)
-        await self.emit()
-        
     async def emit(self):
         """
         Serialize and emit via the proper protocol a message for all the lights
@@ -39,8 +23,7 @@ class DebugOutputDevice(OutputDevice):
     Output device for debug purposes - prints the current state of the lights.
     """
     
-    def __init__(self, id, lights, upstreams):
-        super().__init__(upstreams)
+    def __init__(self, id, lights):
         lights = list(lights)
         for light in lights:
             if not isinstance(light, Light):
