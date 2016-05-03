@@ -1,8 +1,8 @@
 
 from lights.util import filter_for
-from lights.geometry.matrix import MatrixGeometryState
+from common.lights.matrix import MatrixGeometryState
 from lights.state_gen import DELTA
-from lights.light_state import RGBColor
+from common.lights.light_state import RGBColor
 
 @filter_for(MatrixGeometryState)
 def sample_filter(upstream):

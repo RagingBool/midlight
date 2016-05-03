@@ -1,5 +1,5 @@
 
-from lights.light_state import LightState, RGBColor
+from common.lights.light_state import LightState, RGBColor
 
 
 class Light(object):
