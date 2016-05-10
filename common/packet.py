@@ -17,10 +17,7 @@ class LightPacket(object):
 
     def __bytes__(self):
         b = bytearray()
-        if isinstance(self.state, MatrixGeometryState):
-            b.append(self.GEO_TO_INT[MatrixGeometryState])
-        else:
-            raise TypeError("Bad state object")
+        b.append(self.GEO_TO_INT[type(self.state)])
         b.append(self.structure_id)
         b += bytes(self.state)
         return bytes(b)
@@ -51,9 +48,6 @@ def parse(buf):
 
 def serialize(packet):
     b = bytearray()
-    if isinstance(packet, LightPacket):
-        b.append(self.PACKET_TO_INT[LightPacket])
-    else:
-        raise TypeError("Bad packet.")
+    b.append(self.PACKET_TO_INT[type(packet)])
     b += bytes(packet)
     return bytes(b)
