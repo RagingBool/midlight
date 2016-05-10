@@ -1,9 +1,14 @@
 #!/usr/bin/env python
 
+import sys
+import os
+sys.path.append(os.path.split(os.path.split(__file__)[0])[0])
+
 import tkinter as tk
 import asyncio
 
-from input import LightStateDP
+from monitor.input import LightStateDP
+from common.lights.matrix import MatrixGeometryState
 
 async def run_tk(root, interval=0.05):
     '''
@@ -18,7 +23,7 @@ async def run_tk(root, interval=0.05):
             raise
 
 
-class CanvasPacker(object):
+class PackCanvas(object):
     def __init__(self, canvases, ind):
         self.canvases = canvases
         self.canvas = canvases[ind]
@@ -32,19 +37,25 @@ class CanvasPacker(object):
 def main():
     master = tk.Tk()
     var = tk.IntVar()
-    canvas0 = tk.Canvas(master=master, height=200, width=200)
-    canvas1 = tk.Canvas(master=master, height=200, width=200)
-    canvases = [canvas0, canvas1]
-    r0 = tk.Radiobutton(master=master, text="abc", variable=var, value=0,
-        command=CanvasPacker(canvases, 0))
-    r1 = tk.Radiobutton(master=master, text="def", variable=var, value=1,
-        command=CanvasPacker(canvases, 1))
-    r0.pack(side="top")
-    r1.pack(side="top")
+    inputs_map = {k: i for (i, k) in enumerate([ \
+        (0, MatrixGeometryState),
+    ])}
+    canvases = [tk.Canvas(master=master, height=300, width=600) for i in \
+        range(len(inputs_map))]
+    radio_buttons = [tk.Radiobutton(
+        master=master,
+        text="{}: {}".format(c.__name__, n),
+        variable=var,
+        value=i,
+        command=PackCanvas(canvases, i)
+    ) for ((n, c), i) in inputs_map.items()]
+    for r in radio_buttons:
+        r.pack(side="top")
+    PackCanvas(canvases, 0)()
     asyncio.ensure_future(run_tk(master))
     el = asyncio.get_event_loop()
     asyncio.ensure_future(el.create_datagram_endpoint(
-        lambda: LightStateDP(canvases),
+        lambda: LightStateDP(canvases, inputs_map),
         local_addr=("127.0.0.1", 9999),
     ))
     el.run_forever()
