@@ -5,8 +5,15 @@ import re
 class LightState(object):
     """
     Class for represnting a possible state of a light, usually a color.
+    
+    Must be (de-)serializable.
     """
-    pass
+    def __bytes__(self):
+        raise NotImplementedError()
+
+    @classmethod
+    def parse(cls, buf):
+        raise NotImplementedError()
 
 
 class RGBColor(LightState):
@@ -69,3 +76,12 @@ class RGBColor(LightState):
 
     def __str__(self):
         return "#{:02X}{:02X}{:02X}".format(*self.value)
+
+    def __bytes__(self):
+        return bytes([self.r, self.g, self.b])
+
+    @classmethod
+    def parse(cls, buf):
+        if not isinstance(buf, (bytes, bytearray)):
+            raise TypeError("Bad type for buffer.")
+        return cls(r=buf[0], g=buf[1], b=buf[2])

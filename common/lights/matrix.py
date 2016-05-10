@@ -40,9 +40,38 @@ class MatrixGeometryState(GeometryState):
             raise IndexError("Out of bounds")
         self._state[y][x] = state
 
-    def __iter__(self):
+    def items(self):
         for x in range(self.width):
             for y in range(self.height):
-                yield self._state[y][x]
+                yield (x, y), self._state[y][x]
 
+    def keys(self):
+        for x in range(self.width):
+            for y in range(self.height):
+                yield (x, y)
 
+    def values(self):
+        for k, v in self.items():
+            yield v
+
+    __iter__ = keys
+
+    def __bytes__(self):
+        b = bytearray()
+        b += bytes(self.size)
+        for (x, y), v in self.items():
+            b += bytes((x,y))
+            b += bytes(v)
+        return bytes(b)
+
+    @classmethod
+    def parse(cls, buf):
+        if not isinstance(buf, (bytes, bytearray)):
+            raise TypeError("Bad type for buffer.")
+        size = tuple(buf[:2])
+        obj = cls(*size)
+        for i in range(2, len(buf), 5):
+            if len(buf) < i + 5:
+                raise ValueError("Buffer with bad size")
+            obj[buf[i], buf[i+1]] = RGBColor.parse(buf[i+2:i+5])
+        return obj
