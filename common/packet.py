@@ -38,13 +38,16 @@ PACKET_TO_INT = {
 
 INT_TO_PACKET = {v: k for (k, v) in PACKET_TO_INT.items()}
 
-def parse(buf):
+def parse(buf, packet_types=None):
     """
     Parse a general packet.
     """
     if not isinstance(buf, (bytes, bytearray)):
         raise TypeError("Bad type for buffer.")
-    return INT_TO_PACKET[buf[0]].parse(buf[1:])
+    Packet = INT_TO_PACKET[buf[0]]
+    if packet_types is not None and Packet not in packet_types:
+        return None
+    return Packet.parse(buf[1:])
 
 def serialize(packet):
     b = bytearray()
