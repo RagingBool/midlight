@@ -72,6 +72,9 @@ class MatrixGeometryState(GeometryState):
         obj = cls(*size)
         for i in range(2, len(buf), 5):
             if len(buf) < i + 5:
-                raise ValueError("Buffer with bad size")
+                raise ValueError("Buffer with bad size: {}".format(buf))
+            x, y = buf[i], buf[i+1]
+            if x >= size[0] or y >= size[1]:
+                raise ValueError("Bad index of light: {}".format(buf))
             obj[buf[i], buf[i+1]] = RGBColor.parse(buf[i+2:i+5])
         return obj
