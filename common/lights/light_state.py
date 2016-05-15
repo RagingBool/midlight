@@ -26,10 +26,10 @@ class RGBColor(LightState):
             self._g = kwargs["g"]
             self._b = kwargs["b"]
             for c in ["r", "g", "b"]:
-                if not isinstance(kwargs[c], int):
+                if not isinstance(kwargs[c], float):
                     raise TypeError("RGB channels should be ints")
-                if not (0 <= kwargs[c] <= 255):
-                    raise ValueError("RGB channels should be in range [0,255]")
+                if not (0 <= kwargs[c] <= 1):
+                    raise ValueError("RGB channels should be in range [0,1]")
         elif "html" in kwargs:
             m = re.fullmatch(
                 "#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})",
@@ -37,7 +37,7 @@ class RGBColor(LightState):
             )
             if m is None:
                 raise ValueError("Invalid HTML RGB format")
-            self._r, self._g, self._b = (int(x, 16) for x in m.groups())
+            self._r, self._g, self._b = (b2f(int(x, 16)) for x in m.groups())
         else:
             self._r, self._g, self._b = 0, 0, 0
 
@@ -75,13 +75,27 @@ class RGBColor(LightState):
         return tuple(self)
 
     def __str__(self):
-        return "#{:02X}{:02X}{:02X}".format(*self.value)
+        return "#{}".format(bytes(self).hex())
 
     def __bytes__(self):
-        return bytes([self.r, self.g, self.b])
+        return bytes([f2b(self.r), f2b(self.g), f2b(self.b)])
 
     @classmethod
     def parse(cls, buf):
         if not isinstance(buf, (bytes, bytearray)):
             raise TypeError("Bad type for buffer.")
         return cls(r=buf[0], g=buf[1], b=buf[2])
+
+
+def b2f(b):
+    """
+    Convert a byte (int in [0,255]) to a float (in [0,1]).
+    """
+    return b / 255
+
+
+def f2b(b):
+    """
+    Convert a float (in [0,1]) to a byte (int in [0,255]).
+    """
+    return min(255, int(f * 256))
