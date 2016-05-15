@@ -51,6 +51,6 @@ def parse(buf, packet_types=None):
 
 def serialize(packet):
     b = bytearray()
-    b.append(self.PACKET_TO_INT[type(packet)])
+    b.append(PACKET_TO_INT[type(packet)])
     b += bytes(packet)
     return bytes(b)
