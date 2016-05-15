@@ -20,7 +20,7 @@ class MatrixGeometryState(GeometryState):
 
     @property
     def height(self):
-        return self._width
+        return self._height
 
     def __getitem__(self, xy):
         if not isinstance(xy, tuple) or not len(xy) == 2:
