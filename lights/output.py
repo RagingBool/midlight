@@ -1,8 +1,11 @@
 
 import sys
+import socket
 
 from lights.light import Light
 from lights.aitertools import aiter, anext
+from lights.geometry.base import Geometry
+from common.packet import LightPacket, serialize
 
 class OutputDevice(object):
     """
@@ -22,7 +25,6 @@ class DebugOutputDevice(OutputDevice):
     """
     Output device for debug purposes - prints the current state of the lights.
     """
-    
     def __init__(self, id, lights):
         lights = list(lights)
         for light in lights:
@@ -36,3 +38,23 @@ class DebugOutputDevice(OutputDevice):
         s = " | ".join("{}: {} = {}".format(self._id, light, light.state) \
             for light in self._lights)
         sys.stdout.write("\r  "+s+"    ")
+
+
+class MonitorOutputDevice(OutputDevice):
+    """
+    Outputs packets of entire geometries for the monitoring computer.
+    """
+    def __init__(self, geo_id, geo):
+        if not isinstance(geo_id, int):
+            raise TypeError("Geometry id should be int.")
+        self._geo_id = geo_id
+        if not isinstance(geo, Geometry):
+            raise TypeError("Geometry should be a geometry.")
+        self._geo = geo
+        self._s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self._s.bind(("", 0))
+        self._s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+
+    async def emit(self):
+        p = LightPacket(self._geo_id, self._geo.get_state())
+        self._s.sendto(serialize(p), ("0.0.0.0", 9999))

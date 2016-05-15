@@ -14,7 +14,7 @@ from lights.geometry.matrix import MatrixGeometry
 from lights.aitertools import to_aiter, atee, azip, consume
 from lights.filters.sample_matrix import sample_filter
 from lights.util import AsyncAppliedFilter
-from lights.output import DebugOutputDevice
+from lights.output import DebugOutputDevice, MonitorOutputDevice
 
 def iter_state(obj):
     while True:
@@ -38,18 +38,20 @@ async def run(state_gen, geos_and_filters, outs):
 def main():
     conf = get_config(1)
     dl = {}
-    matrix_m = []
-    for row in conf["MATRIX"]:
-        new_row = []
-        for id in row:
-            l = dl.setdefault(id, RGBLight(id))
-            new_row.append(l)
-        matrix_m.append(new_row)
-    matrix = MatrixGeometry(matrix_m)
-    geos_and_filters = [
-        (matrix, (sample_filter(),)),
-    ]
     outs = []
+    geos_and_filters = []
+    for geo_id, (matrix, monitor) in conf["MATRIX"].items():
+        matrix_m = []
+        for row in matrix:
+            new_row = []
+            for id in row:
+                l = dl.setdefault(id, RGBLight(id))
+                new_row.append(l)
+            matrix_m.append(new_row)
+        matrix = MatrixGeometry(matrix_m)
+        geos_and_filters.append((matrix, (sample_filter(),)))
+        if monitor:
+            outs.append(MonitorOutputDevice(geo_id, matrix))
     for i, (key, l) in enumerate(conf["DEBUG"].items()):
         new_l = []
         for id in l:
