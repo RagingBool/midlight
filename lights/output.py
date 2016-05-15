@@ -57,4 +57,4 @@ class MonitorOutputDevice(OutputDevice):
 
     async def emit(self):
         p = LightPacket(self._geo_id, self._geo.get_state())
-        self._s.sendto(serialize(p), ("0.0.0.0", 9999))
+        self._s.sendto(serialize(p), ("255.255.255.255", 9999))

@@ -56,7 +56,7 @@ def main():
     el = asyncio.get_event_loop()
     asyncio.ensure_future(el.create_datagram_endpoint(
         lambda: LightStateDP(canvases, inputs_map),
-        local_addr=("127.0.0.1", 9999),
+        local_addr=("0.0.0.0", 9999),
     ))
     el.run_forever()
 
