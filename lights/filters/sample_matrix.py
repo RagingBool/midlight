@@ -6,18 +6,23 @@ from common.lights.light_state import RGBColor
 
 @filter_for(MatrixGeometryState)
 def sample_filter(upstream):
-    acc = 0
-    period = 0.5
-    ind = 0
+    accx = 0
+    accy = 0
+    periodx = 0.8
+    periody = 1 
+    gradex = 10
+    gradey = 8
     for light_state, input_state in upstream:
         w, h = light_state.size
-        assert w == 2
-        assert h == 2
         delta = input_state[DELTA]
-        acc += delta
-        if acc >= period:
-            acc -= period
-            ind += 1
-        light_state[(ind//2)%2, ind%2].r = 0
-        light_state[((ind+1)//2)%2, (ind+1)%2].r = 255
+        accx += delta
+        if accx >= periodx:
+            accx -= periodx
+        accy += delta
+        if accy >= periody:
+            accy -= periody
+        for x in range(w):
+            for y in range(h):
+                light_state[x, y].r = ((x / gradex) + (accx / periodx)) % 1
+                light_state[x, y].b = ((y / gradey) + (accy / periody)) % 1
         yield light_state

@@ -6,12 +6,12 @@ def get_config(pi_id):
         return {
             "MATRIX": {
                 0: ([
-                    ["l00", "l10"],
-                    ["l01", "l11"],
+                    ["l{:02d}{:02d}".format(x, y) for x in range(60)] \
+                    for y in range(30)
                 ], True)
             },
             "DEBUG": {
-                "debug1": ["l00", "l10", "l01", "l11"]
+                #"debug1": ["l00", "l10", "l01", "l11"]
             },
         }
 
