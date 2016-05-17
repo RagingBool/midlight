@@ -10,7 +10,7 @@ import asyncio
 from monitor.input import LightStateDP
 from common.lights.matrix import MatrixGeometryState
 
-async def run_tk(root, interval=0.05):
+async def run_tk(root, interval=0.01):
     '''
     Run a tkinter app in an asyncio event loop.
     '''
