@@ -23,6 +23,7 @@ def sample_filter(upstream):
             accy -= periody
         for x in range(w):
             for y in range(h):
-                light_state[x, y].r = ((x / gradex) + (accx / periodx)) % 1
-                light_state[x, y].b = ((y / gradey) + (accy / periody)) % 1
+                light_state[x, y].h = ((x / gradex) + (accx / periodx)) % 1
+                light_state[x, y].i = ((y / gradey) + (accy / periody)) % 1
+                light_state[x, y].s = 1
         yield light_state
