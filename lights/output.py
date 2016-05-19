@@ -57,4 +57,9 @@ class MonitorOutputDevice(OutputDevice):
 
     async def emit(self):
         p = LightPacket(self._geo_id, self._geo.get_state())
-        self._s.sendto(serialize(p), ("255.255.255.255", 9999))
+        data = serialize(p)
+        try:
+            self._s.sendto(data, ("255.255.255.255", 9999))
+        except OSError:
+            self._s.sendto(data, ("127.255.255.255", 9999))
+
