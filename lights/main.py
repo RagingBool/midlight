@@ -8,9 +8,9 @@ sys.path.append(os.path.split(os.path.split(os.path.abspath(__file__))[0])[0])  
 import asyncio
 
 from lights.config import get_config
-from lights.light import RGBLight
+from common.light import RGBLight
 from lights.state_gen import STATE_GEN
-from lights.geometry.matrix import MatrixGeometry
+from common.geometry.matrix import MatrixGeometry
 from lights.aitertools import to_aiter, atee, azip, consume
 from lights.filters.sample_matrix import sample_filter
 from lights.util import AsyncAppliedFilter

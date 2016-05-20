@@ -2,9 +2,9 @@
 import sys
 import socket
 
-from lights.light import Light
+from common.light import Light
 from lights.aitertools import aiter, anext
-from lights.geometry.base import Geometry
+from common.geometry.base import Geometry
 from common.packet import LightPacket, serialize
 
 class OutputDevice(object):

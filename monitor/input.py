@@ -2,7 +2,7 @@
 import asyncio
 
 from common.packet import parse, LightPacket
-from common.lights.matrix import MatrixGeometryState
+from common.geometry.matrix import MatrixGeometryState
 from monitor.matrix import MatrixPainter
 
 

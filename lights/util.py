@@ -3,7 +3,7 @@
 from functools import wraps
 
 from lights.aitertools import aiter, anext
-from lights.geometry.base import GeometryState
+from common.geometry.base import GeometryState
 
 
 class Filter(object):

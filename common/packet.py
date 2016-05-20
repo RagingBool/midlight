@@ -1,5 +1,5 @@
 
-from common.lights.matrix import MatrixGeometryState
+from common.geometry.matrix import MatrixGeometryState
 
 class LightPacket(object):
     """
