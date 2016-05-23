@@ -33,10 +33,21 @@ class LightState(object):
     Must be (de-)serializable.
     """
     def __bytes__(self):
+        """
+        Must return a buffer 4 bytes long.
+        """
         raise NotImplementedError()
 
     @classmethod
     def parse(cls, buf):
+        o = cls()
+        o.iparse(buf)
+        return o
+
+    def iparse(self, buf):
+        """
+        Buffer should be 4 bytes long, but cannot be counted on.
+        """
         raise NotImplementedError()
 
 
@@ -150,16 +161,17 @@ class RGBColor(LightState):
         yield self.b
 
     def __str__(self):
-        return "#{}".format(bytes(self).hex())
+        return "#{}".format(bytes(self)[:3].hex())
 
     def __bytes__(self):
-        return bytes([f2b(self.r), f2b(self.g), f2b(self.b)])
+        return bytes([f2b(self.r), f2b(self.g), f2b(self.b), 0])
 
-    @classmethod
-    def parse(cls, buf):
+    def iparse(self, buf):
         if not isinstance(buf, (bytes, bytearray)):
             raise TypeError("Bad type for buffer.")
-        return cls(r=b2f(buf[0]), g=b2f(buf[1]), b=b2f(buf[2]))
+        self.r = b2f(buf[0])
+        self.g = b2f(buf[1])
+        self.b = b2f(buf[2])
 
 
 def b2f(b):
