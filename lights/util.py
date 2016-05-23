@@ -3,7 +3,7 @@
 from functools import wraps
 
 from lights.aitertools import aiter, anext
-from common.geometry.base import GeometryState
+from common.geometry.base import Geometry
 
 
 class Filter(object):
@@ -13,15 +13,18 @@ class Filter(object):
     modified state. May consume members of the input state (mutable), except
     for the DELTA member.
     """
-    GEO_CLS = GeometryState
+    GEO_CLS = Geometry
 
     def step(self, light_state, input_state):
         if not isinstance(input_state, dict) or \
             not isinstance(light_state, self.GEO_CLS):
             raise TypeError()
         new_light_state = self._step(light_state, input_state)
-        if not isinstance(new_light_state, self.GEO_CLS):
-            raise RuntimeError()
+        #if not isinstance(new_light_state, self.GEO_CLS):
+            #raise RuntimeError()
+        # FIXME
+        if not new_light_state is light_state:
+            raise RuntimeError("Filter should only change the geo inplace.")
         return new_light_state
 
     def _step(self, light_state, input_state):

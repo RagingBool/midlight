@@ -32,7 +32,7 @@ def parse(buf, packet_types=None):
 
 
 def serialize_light(light_ids):
-    light_ids = tuple(light_ids)
+    light_ids = tuple(light_ids.ids)
     b = bytearray(1+len(light_ids)*8)
     b[0] = LIGHT_PACKET
     for i, light_id in enumerate(light_ids):

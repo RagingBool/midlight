@@ -1,10 +1,10 @@
 
 from lights.util import filter_for
-from common.geometry.matrix import MatrixGeometryState
+from common.geometry.matrix import MatrixGeometry
 from lights.state_gen import DELTA
 from common.color import RGBColor
 
-@filter_for(MatrixGeometryState)
+@filter_for(MatrixGeometry)
 def sample_filter(upstream):
     accx = 0
     accy = 0

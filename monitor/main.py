@@ -13,15 +13,15 @@ from common.geometry.matrix import MatrixGeometry
 from common.config.example import GEOMETRIES
 from monitor.matrix import MatrixPainter
 
-async def run_tk(root, painter_geos, interval=0.05):
+async def run_tk(root, painters, interval=0.05):
     '''
     Run a tkinter app in an asyncio event loop.
     '''
     try:
         while True:
             t = time.time()
-            for painter, geo in painter_geos:
-                painter.paint(geo.get_state())
+            for painter in painters:
+                painter.paint()
             root.update()
             await asyncio.sleep(t+interval-time.time())
     except tk.TclError as e:
@@ -61,9 +61,9 @@ def main():
     for r in radio_buttons:
         r.pack(side="top")
     PackCanvas(canvases, 0)()
-    painter_geos = [(PAINTERS[type(geo)](canvases[i]), geo) for \
+    painters = [PAINTERS[type(geo)](canvases[i], geo) for \
         i, (name, geo) in enumerate(geos)]
-    asyncio.ensure_future(run_tk(master, painter_geos))
+    asyncio.ensure_future(run_tk(master, painters))
     el = asyncio.get_event_loop()
     asyncio.ensure_future(el.create_datagram_endpoint(
         LightStateDP,

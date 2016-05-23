@@ -1,16 +1,24 @@
 
 from common.color import RGBColor
-from common.geometry.base import GeometryState
 from common.geometry.base import Geometry
 from common.light import Lights, ID
 
 
-class MatrixGeometryState(GeometryState):
+class MatrixGeometry(Geometry):
 
-    def __init__(self, width, height):
-        self._width = width
-        self._height = height
-        self._state = [[None]*width for i in range(height)]
+    def __init__(self, two_d_l):
+        self._height = len(two_d_l)
+        if self._height == 0:
+            raise ValueError("No empty matrix.")
+        self._width = len(two_d_l[0])
+        self._lights = [[None] * self._width for i in range(self._height)]
+        for y, row in enumerate(two_d_l):
+            if self._width != len(row):
+                raise ValueError("Rows are not of identical length.")
+            for x, light in enumerate(row):
+                id = ID(light)
+                self._lights[y][x] = id
+                Lights(id, RGBColor)
 
     @property
     def size(self):
@@ -30,7 +38,7 @@ class MatrixGeometryState(GeometryState):
         x, y = xy
         if x >= self._width or y >= self._height:
             raise IndexError("Out of bounds")
-        return self._state[y][x]
+        return Lights[self._lights[y][x]]
 
     def __setitem__(self, xy, state):
         if not isinstance(xy, tuple) or not len(xy) == 2:
@@ -40,12 +48,12 @@ class MatrixGeometryState(GeometryState):
         x, y = xy
         if x >= self._width or y >= self._height:
             raise IndexError("Out of bounds")
-        self._state[y][x] = state
+        Lights[self._lights[y][x]] = state
 
     def items(self):
         for x in range(self.width):
             for y in range(self.height):
-                yield (x, y), self._state[y][x]
+                yield (x, y), self[x, y]
 
     def keys(self):
         for x in range(self.width):
@@ -56,40 +64,10 @@ class MatrixGeometryState(GeometryState):
         for k, v in self.items():
             yield v
 
-    __iter__ = keys
-
-
-class MatrixGeometry(Geometry):
-
-    STATE_CLS = MatrixGeometryState
-    
-    def __init__(self, two_d_l):
-        self._height = len(two_d_l)
-        if self._height == 0:
-            raise ValueError("No empty matrix.")
-        self._width = len(two_d_l[0])
-        self._lights = [[None] * self._width for i in range(self._height)]
-        for y, row in enumerate(two_d_l):
-            if self._width != len(row):
-                raise ValueError("Rows are not of identical length.")
-            for x, light in enumerate(row):
-                id = ID(light)
-                self._lights[y][x] = id
-                Lights(id, RGBColor)
-
-    def _get_state(self):
-        mgs = MatrixGeometryState(self._width, self._height)
-        for x in range(self._width):
-            for y in range(self._height):
-                mgs[x, y] = Lights[ID(self._lights[y][x])]
-        return mgs
-
-    def _set_state(self, geo_state):
-        for x in range(self._width):
-            for y in range(self._height):
-                Lights[self._lights[y][x]] = geo_state[x, y] 
-
-    def __iter__(self):
+    @property
+    def ids(self):
         for x in range(self._width):
             for y in range(self._height):
                 yield self._lights[y][x]
+
+    __iter__ = values
