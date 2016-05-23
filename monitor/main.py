@@ -11,7 +11,7 @@ import time
 from monitor.input import LightStateDP
 from common.geometry.matrix import MatrixGeometry
 from common.config.example import GEOMETRIES
-from monitor.matrix import MatrixPainter
+from monitor.painter.matrix import MatrixPainter
 
 async def run_tk(root, painters, interval=0.05):
     '''
