@@ -70,4 +70,6 @@ class MatrixGeometry(Geometry):
             for y in range(self._height):
                 yield self._lights[y][x]
 
-    __iter__ = values
+    states = property(values)
+
+    __iter__ = keys
