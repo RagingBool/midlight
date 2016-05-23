@@ -44,7 +44,7 @@ def main():
         geos_and_filters.append((matrix, (sample_filter(),)))
         if monitor:
             outs.append(MonitorOutputDevice(geo_id, matrix))
-    for i, (key, l) in enumerate(conf["DEBUG"].items()):
+    for key, l in conf["DEBUG"].items():
         outs.append(DebugOutputDevice(key, l))
     el = asyncio.get_event_loop()
     el.run_until_complete(run(STATE_GEN, geos_and_filters, outs))
