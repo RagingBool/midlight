@@ -95,7 +95,7 @@ class azip(object):
 
 class to_aiter(object):
     """
-    Convert a given aiterable to aiter.
+    Convert a given iterable to aiter.
     """
     def __init__(self, iterable):
         self._it = iter(iterable)
