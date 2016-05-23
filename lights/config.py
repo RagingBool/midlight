@@ -5,13 +5,10 @@ def get_config(pi_id):
     if pi_id == 1:
         return {
             "MATRIX": {
-                0: ([
-                    ["{:02x}{:02x}".format(x, y) for x in range(60)] \
-                    for y in range(30)
-                ], True)
+                "matrix0": True,
             },
             "DEBUG": {
-                #"debug1": ["l00", "l10", "l01", "l11"]
+                #"debug1": ["l00", "l10", "l01", "l11"],
             },
         }
 
