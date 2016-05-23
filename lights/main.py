@@ -8,7 +8,6 @@ sys.path.append(os.path.split(os.path.split(os.path.abspath(__file__))[0])[0])  
 import asyncio
 
 from lights.config import get_config
-from common.light import RGBLight
 from lights.state_gen import STATE_GEN
 from common.geometry.matrix import MatrixGeometry
 from lights.aitertools import to_aiter, atee, azip, consume
@@ -40,24 +39,13 @@ def main():
     dl = {}
     outs = []
     geos_and_filters = []
-    for geo_id, (matrix, monitor) in conf["MATRIX"].items():
-        matrix_m = []
-        for row in matrix:
-            new_row = []
-            for id in row:
-                l = dl.setdefault(id, RGBLight(id))
-                new_row.append(l)
-            matrix_m.append(new_row)
+    for geo_id, (matrix_m, monitor) in conf["MATRIX"].items():
         matrix = MatrixGeometry(matrix_m)
         geos_and_filters.append((matrix, (sample_filter(),)))
         if monitor:
             outs.append(MonitorOutputDevice(geo_id, matrix))
     for i, (key, l) in enumerate(conf["DEBUG"].items()):
-        new_l = []
-        for id in l:
-            l = dl.setdefault(id, RGBLight(id))
-            new_l.append(l)
-        outs.append(DebugOutputDevice(key, new_l))
+        outs.append(DebugOutputDevice(key, l))
     el = asyncio.get_event_loop()
     el.run_until_complete(run(STATE_GEN, geos_and_filters, outs))
 

@@ -1,42 +1,47 @@
 
 from common.color import LightState, RGBColor
 
-
-class Light(object):
-    """
-    Base class for the representation of a single light. This is a mostly a
-    container, for the high level rendering to set a color and for the low
-    level output to get it and emit.
-    Each instance of this class corresponds to a single physical light unit
-    (LED or set of LEDs which always have the same light configuration).
-    """
-    STATE_TYPE = LightState
-
-    def __init__(self, id):
-        self._id = id
-        self._state = self.STATE_TYPE()
-
-    def __str__(self):
-        return "Light #{}".format(self._id)
-
-    @property
-    def id(self):
-        return self._id
-
-    @property
-    def state(self):
-        """
-        The state of the physical light unit.
-        """
-        return self._state
-
-    @state.setter
-    def state(self, state):
-        if not isinstance(state, self.STATE_TYPE):
-            raise TypeError("This light's state should be a {}". \
-                format(self.STATE_TYPE))
-        self._state = state
+ID_SIZE = 4
 
 
-class RGBLight(Light):
-    STATE_TYPE = RGBColor
+class ID(bytes):
+    def __new__(cls, x):
+        if isinstance(x, str):
+            if len(x) > ID_SIZE*2:
+                raise ValueError("Bad id.")
+            return super().__new__(cls, bytes.fromhex(
+                "{{:0>{size}.{size}s}}".format(size=ID_SIZE*2).format(x)))
+        elif isinstance(x, int):
+            if x >= (1 << (ID_SIZE*8)):
+                raise ValueError("Bad id.")
+            return super().__new__(cls, bytes.fromhex(
+                "{{:0{size}X}}".format(size=ID_SIZE*2).format(x)))
+        elif isinstance(x, (bytes, bytearray, list, tuple)):
+            if len(x) != ID_SIZE:
+                raise ValueError("Bad id.")
+            return super().__new__(cls, x)
+        elif isinstance(x, ID):
+            return x
+        else:
+            raise TypeError("Bad id.")
+
+    __str__ = bytes.hex
+
+
+class FixedDict(dict):
+    
+    def __call__(self, key, type):
+        if not isinstance(key, ID):
+            raise TypeError("Key should be ID.")
+        super().__setitem__(key, type())
+
+    def __setitem__(self, key, value):
+        if not isinstance(key, ID):
+            raise TypeError("Key should be ID.")
+        if key not in self:
+            raise ValueError("Invalid key.")
+        if not type(value) == type(self[key]):
+            raise TypeError("Invalid value type.")
+
+
+Lights = FixedDict()

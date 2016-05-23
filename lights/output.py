@@ -2,7 +2,6 @@
 import sys
 import socket
 
-from common.light import Light
 from lights.aitertools import aiter, anext
 from common.geometry.base import Geometry
 from common.packet import LightPacket, serialize
@@ -26,16 +25,12 @@ class DebugOutputDevice(OutputDevice):
     Output device for debug purposes - prints the current state of the lights.
     """
     def __init__(self, id, lights):
-        lights = list(lights)
-        for light in lights:
-            if not isinstance(light, Light):
-                raise TypeError("All elements in collection should be Light " \
-                    "objects")
+        lights = [ID(light) for light in lights]
         self._lights = lights
         self._id = id
 
     async def emit(self):
-        s = " | ".join("{}: {} = {}".format(self._id, light, light.state) \
+        s = " | ".join("{}: {} = {}".format(self._id, light, Lights[ID(light)]) \
             for light in self._lights)
         sys.stdout.write("\r  "+s+"    ")
 

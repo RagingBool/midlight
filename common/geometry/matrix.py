@@ -1,8 +1,8 @@
 
 from common.color import RGBColor
 from common.geometry.base import GeometryState
-from common.light import RGBLight
 from common.geometry.base import Geometry
+from common.light import Lights, ID
 
 
 class MatrixGeometryState(GeometryState):
@@ -91,23 +91,23 @@ class MatrixGeometry(Geometry):
         if self._height == 0:
             raise ValueError("No empty matrix.")
         self._width = len(two_d_l[0])
-        for row in two_d_l:
+        self._lights = [[None] * self._width for i in range(self._height)]
+        for y, row in enumerate(two_d_l):
             if self._width != len(row):
                 raise ValueError("Rows are not of identical length.")
-            for light in row:
-                if not isinstance(light, RGBLight):
-                    raise TypeError("All elements in collection should be " \
-                        "Light objects")
-        self._lights = two_d_l
+            for x, light in enumerate(row):
+                id = ID(light)
+                self._lights[y][x] = id
+                Lights(id, RGBColor)
 
     def _get_state(self):
         mgs = MatrixGeometryState(self._width, self._height)
         for x in range(self._width):
             for y in range(self._height):
-                mgs[x, y] = self._lights[y][x].state
+                mgs[x, y] = Lights[ID(self._lights[y][x])]
         return mgs
 
     def _set_state(self, geo_state):
         for x in range(self._width):
             for y in range(self._height):
-                self._lights[y][x].state = geo_state[x, y] 
+                Lights[self._lights[y][x]] = geo_state[x, y] 
