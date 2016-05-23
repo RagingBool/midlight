@@ -18,8 +18,8 @@ TWO = EDGES + [
 
 THREE = EDGES + [
     "t_l", # triangle left
+    "t_t", # triangle top
     "t_r", # triangle right
-    "t_b", # triangle bottom
 ]
 
 HOUSES = {
