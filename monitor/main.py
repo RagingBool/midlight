@@ -61,8 +61,12 @@ def main():
     for r in radio_buttons:
         r.pack(side="top")
     PackCanvas(canvases, 0)()
-    painters = [PAINTERS[type(geo)](canvases[i], geo) for \
-        i, (name, geo) in enumerate(geos)]
+    painters = [PAINTERS[type(geo)](
+            canvas=canvases[i],
+            geometry=geo,
+            h=300,
+            w=600,
+        ) for i, (name, geo) in enumerate(geos)]
     asyncio.ensure_future(run_tk(master, painters))
     el = asyncio.get_event_loop()
     asyncio.ensure_future(el.create_datagram_endpoint(
