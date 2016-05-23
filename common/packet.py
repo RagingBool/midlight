@@ -1,42 +1,22 @@
 
-from common.geometry.matrix import MatrixGeometryState
-
-class LightPacket(object):
-    """
-    Represents a single network packet.
-    """
-    GEO_TO_INT = {
-        MatrixGeometryState: 0,
-    }
-
-    INT_TO_GEO = {v: k for (k, v) in GEO_TO_INT.items()}
-
-    def __init__(self, structure_id, state):
-        self.structure_id = structure_id
-        self.state = state
-
-    def __bytes__(self):
-        b = bytearray()
-        b.append(self.GEO_TO_INT[type(self.state)])
-        b.append(self.structure_id)
-        b += bytes(self.state)
-        return bytes(b)
-
-    @classmethod
-    def parse(cls, buf):
-        if not isinstance(buf, (bytes, bytearray)):
-            raise TypeError("Bad type for buffer.")
-        Geo = cls.INT_TO_GEO[buf[0]]
-        structure_id = buf[1]
-        state = Geo.parse(buf[2:])
-        return cls(structure_id=structure_id, state=state)
+from common.light import Lights, ID
 
 
-PACKET_TO_INT = {
-    LightPacket: 0,
+def parse_light(buf):
+    if not isinstance(buf, (bytes, bytearray)):
+        raise TypeError("Bad type for buffer.")
+    for i in range(0, len(buf), 8):
+        if len(buf) < i + 8:
+            raise ValueError("Buffer with bad size: {}".format(buf))
+        Lights[ID(buf[i:i+4])].iparse(buf[i+4:i+8])
+
+
+LIGHT_PACKET = 0
+
+PARSERS = {
+    LIGHT_PACKET: parse_light,
 }
 
-INT_TO_PACKET = {v: k for (k, v) in PACKET_TO_INT.items()}
 
 def parse(buf, packet_types=None):
     """
@@ -44,13 +24,18 @@ def parse(buf, packet_types=None):
     """
     if not isinstance(buf, (bytes, bytearray)):
         raise TypeError("Bad type for buffer.")
-    Packet = INT_TO_PACKET[buf[0]]
-    if packet_types is not None and Packet not in packet_types:
+    t = buf[0]
+    parser = PARSERS[t]
+    if packet_types is not None and t not in packet_types:
         return None
-    return Packet.parse(buf[1:])
+    return parser(buf[1:])
 
-def serialize(packet):
-    b = bytearray()
-    b.append(PACKET_TO_INT[type(packet)])
-    b += bytes(packet)
+
+def serialize_light(light_ids):
+    light_ids = tuple(light_ids)
+    b = bytearray(1+len(light_ids)*8)
+    b[0] = LIGHT_PACKET
+    for i, light_id in enumerate(light_ids):
+        b[1+8*i:1+8*i+4] = light_id
+        b[1+8*i+4:1+8*i+8] = bytes(Lights[ID(light_id)])
     return bytes(b)

@@ -6,21 +6,32 @@ sys.path.append(os.path.split(os.path.split(__file__)[0])[0])
 
 import tkinter as tk
 import asyncio
+import time
 
 from monitor.input import LightStateDP
-from common.geometry.matrix import MatrixGeometryState
+from common.geometry.matrix import MatrixGeometry
+from common.config.example import GEOMETRIES
+from monitor.matrix import MatrixPainter
 
-async def run_tk(root, interval=0.01):
+async def run_tk(root, painter_geos, interval=0.05):
     '''
     Run a tkinter app in an asyncio event loop.
     '''
     try:
         while True:
+            t = time.time()
+            for painter, geo in painter_geos:
+                painter.paint(geo.get_state())
             root.update()
-            await asyncio.sleep(interval)
+            await asyncio.sleep(t+interval-time.time())
     except tk.TclError as e:
         if "application has been destroyed" not in e.args[0]:
             raise
+
+
+PAINTERS = {
+    MatrixGeometry: MatrixPainter,
+}
 
 
 class PackCanvas(object):
@@ -37,25 +48,25 @@ class PackCanvas(object):
 def main():
     master = tk.Tk()
     var = tk.IntVar()
-    inputs_map = {k: i for (i, k) in enumerate([ \
-        (0, MatrixGeometryState),
-    ])}
+    geos = list(GEOMETRIES.items())
     canvases = [tk.Canvas(master=master, height=300, width=600) for i in \
-        range(len(inputs_map))]
+        range(len(geos))]
     radio_buttons = [tk.Radiobutton(
         master=master,
-        text="{}: {}".format(c.__name__, n),
+        text="{}: {}".format(type(geo).__name__, name),
         variable=var,
         value=i,
         command=PackCanvas(canvases, i)
-    ) for ((n, c), i) in inputs_map.items()]
+    ) for (i, (name, geo)) in enumerate(geos)]
     for r in radio_buttons:
         r.pack(side="top")
     PackCanvas(canvases, 0)()
-    asyncio.ensure_future(run_tk(master))
+    painter_geos = [(PAINTERS[type(geo)](canvases[i]), geo) for \
+        i, (name, geo) in enumerate(geos)]
+    asyncio.ensure_future(run_tk(master, painter_geos))
     el = asyncio.get_event_loop()
     asyncio.ensure_future(el.create_datagram_endpoint(
-        lambda: LightStateDP(canvases, inputs_map),
+        LightStateDP,
         local_addr=("0.0.0.0", 9999),
     ))
     el.run_forever()

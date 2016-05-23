@@ -58,29 +58,6 @@ class MatrixGeometryState(GeometryState):
 
     __iter__ = keys
 
-    def __bytes__(self):
-        b = bytearray()
-        b += bytes(self.size)
-        for (x, y), v in self.items():
-            b += bytes((x,y))
-            b += bytes(v)
-        return bytes(b)
-
-    @classmethod
-    def parse(cls, buf):
-        if not isinstance(buf, (bytes, bytearray)):
-            raise TypeError("Bad type for buffer.")
-        size = tuple(buf[:2])
-        obj = cls(*size)
-        for i in range(2, len(buf), 6):
-            if len(buf) < i + 6:
-                raise ValueError("Buffer with bad size: {}".format(buf))
-            x, y = buf[i], buf[i+1]
-            if x >= size[0] or y >= size[1]:
-                raise ValueError("Bad index of light: {}".format(buf))
-            obj[buf[i], buf[i+1]] = RGBColor.parse(buf[i+2:i+6])
-        return obj
-
 
 class MatrixGeometry(Geometry):
 
@@ -111,3 +88,8 @@ class MatrixGeometry(Geometry):
         for x in range(self._width):
             for y in range(self._height):
                 Lights[self._lights[y][x]] = geo_state[x, y] 
+
+    def __iter__(self):
+        for x in range(self._width):
+            for y in range(self._height):
+                yield self._lights[y][x]

@@ -39,11 +39,11 @@ def main():
     dl = {}
     outs = []
     geos_and_filters = []
-    for i, (geo_id, monitor) in enumerate(conf["MATRIX"].items()):
+    for geo_id, monitor in conf["MATRIX"].items():
         matrix = GEOMETRIES[geo_id]
         geos_and_filters.append((matrix, (sample_filter(),)))
         if monitor:
-            outs.append(MonitorOutputDevice(geo_id=i, geo=matrix))
+            outs.append(MonitorOutputDevice(matrix))
     for key, l in conf["DEBUG"].items():
         outs.append(DebugOutputDevice(key, l))
     el = asyncio.get_event_loop()

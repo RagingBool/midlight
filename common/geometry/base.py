@@ -12,13 +12,6 @@ class GeometryState(object):
 
     def __iter__(self):
         raise NotImplementedError()
-    
-    def __bytes__(self):
-        raise NotImplementedError()
-
-    @classmethod
-    def parse(cls, buf):
-        raise NotImplementedError()
 
 
 class Geometry(object):
@@ -48,4 +41,7 @@ class Geometry(object):
         self._set_state(state)
 
     def _set_state(self):
+        raise NotImplementedError()
+
+    def __iter__(self):
         raise NotImplementedError()

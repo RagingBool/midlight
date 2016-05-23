@@ -4,7 +4,8 @@ import socket
 
 from lights.aitertools import aiter, anext
 from common.geometry.base import Geometry
-from common.packet import LightPacket, serialize
+from common.packet import serialize_light
+from common.light import Lights, ID
 
 class OutputDevice(object):
     """
@@ -39,10 +40,7 @@ class MonitorOutputDevice(OutputDevice):
     """
     Outputs packets of entire geometries for the monitoring computer.
     """
-    def __init__(self, geo_id, geo):
-        if not isinstance(geo_id, int):
-            raise TypeError("Geometry id should be int.")
-        self._geo_id = geo_id
+    def __init__(self, geo):
         if not isinstance(geo, Geometry):
             raise TypeError("Geometry should be a geometry.")
         self._geo = geo
@@ -51,8 +49,7 @@ class MonitorOutputDevice(OutputDevice):
         self._s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
     async def emit(self):
-        p = LightPacket(self._geo_id, self._geo.get_state())
-        data = serialize(p)
+        data = serialize_light(self._geo)
         try:
             self._s.sendto(data, ("255.255.255.255", 9999))
         except OSError:
