@@ -9,7 +9,9 @@ class MatrixGeometry(Geometry):
     def __init__(self, two_d_l):
         self._height = len(two_d_l)
         if self._height == 0:
-            raise ValueError("No empty matrix.")
+            self._width = 0
+            self._lights = []
+            return
         self._width = len(two_d_l[0])
         self._lights = [[None] * self._width for i in range(self._height)]
         for y, row in enumerate(two_d_l):
@@ -33,18 +35,12 @@ class MatrixGeometry(Geometry):
         return self._height
 
     def __getitem__(self, xy):
-        if not isinstance(xy, tuple) or not len(xy) == 2:
-            raise TypeError("Can only be accessed with 2d coordinates.")
         x, y = xy
-        if x >= self._width or y >= self._height:
-            raise IndexError("Out of bounds")
         return Lights[self._lights[y][x]]
 
     def __setitem__(self, xy, state):
         if not isinstance(xy, tuple) or not len(xy) == 2:
             raise TypeError("Can only be accessed with 2d coordinates.")
-        if not isinstance(state, RGBColor):
-            raise TypeError("Can only be set to a RGBColor.")
         x, y = xy
         if x >= self._width or y >= self._height:
             raise IndexError("Out of bounds")
