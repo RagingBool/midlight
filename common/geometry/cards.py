@@ -3,6 +3,7 @@ from common.color import RGBColor
 from common.geometry.base import Geometry
 from common.light import Lights, ID
 
+
 E_L = "E_L"  # edge left
 E_R = "E_R"  # edge right
 E_B = "E_B"  # edge bottom
@@ -36,15 +37,6 @@ THREE = EDGES + [
     T_R,  # triangle right
 ]
 
-HOUSES = {
-    L_1: ONE,
-    R_1: ONE,
-    L_2: TWO,
-    R_2: TWO,
-    L_3: THREE,
-    R_3: THREE,
-}
-
 HOUSES_KEYS = [
     L_1,
     L_2,
@@ -53,6 +45,15 @@ HOUSES_KEYS = [
     R_2,
     R_1,
 ]
+
+HOUSES = {
+    L_1: ONE,
+    R_1: ONE,
+    L_2: TWO,
+    R_2: TWO,
+    L_3: THREE,
+    R_3: THREE,
+}
 
 KEYS = set()
 for h, c_l in HOUSES.items():
