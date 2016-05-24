@@ -47,11 +47,11 @@ HOUSES = {
 
 HOUSES_KEYS = [
     L_1,
-    R_1,
     L_2,
-    R_2,
     L_3,
     R_3,
+    R_2,
+    R_1,
 ]
 
 KEYS = set()
@@ -99,7 +99,7 @@ class CardsGeometry(Geometry):
     @property
     def ids(self):
         for h, c in KEYS:
-            return self._lights[h][c]
+            yield self._lights[h][c]
 
     __iter__ = keys
 
