@@ -1,7 +1,7 @@
 
 from lights.util import filter_for
 from common.geometry.matrix import MatrixGeometry
-from lights.state_gen import DELTA
+from lights.state_gen.consts import DELTA
 from common.color import RGBColor
 
 @filter_for(MatrixGeometry)

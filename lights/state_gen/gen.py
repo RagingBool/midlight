@@ -2,9 +2,8 @@
 import time
 import asyncio
 
+from lights.state_gen.consts import DELTA
 from lights.config import FRAME_RATE
-
-DELTA = "DELTA"
 
 class _StateGen(object):
     """

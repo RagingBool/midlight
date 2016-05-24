@@ -2,7 +2,7 @@
 from lights.util import filter_for
 from common.geometry.cards import E_L, E_R, E_B, T, T_L, T_T, T_R, L_1, R_1, \
     L_2, R_2, L_3, R_3, CardsGeometry, HOUSES_KEYS, HOUSES
-from lights.state_gen import DELTA
+from lights.state_gen.consts import DELTA
 from common.color import RGBColor
 
 @filter_for(CardsGeometry)

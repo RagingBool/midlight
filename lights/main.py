@@ -9,7 +9,7 @@ import asyncio
 import itertools
 
 from lights.config import get_config
-from lights.state_gen import STATE_GEN
+from lights.state_gen.gen import STATE_GEN
 from lights.aitertools import to_aiter, atee, azip, consume
 from lights.filters.sample_matrix import sample_matrix_filter
 from lights.filters.sample_cards import sample_cards_filter
