@@ -8,8 +8,7 @@ class MatrixPainter(Painter):
         for (x, y), c in self._geometry.items():
             self._canvas.itemconfig(self._rects[x, y], fill=str(c))
 
-    def update_size(self, h, w):
-        self._canvas.delete("all")
+    def _update_size(self, h, w):
         self._rects = {}
         edge = min(w/self._geometry.width, h/self._geometry.height)
         for (x, y), c in self._geometry.items():

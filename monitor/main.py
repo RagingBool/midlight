@@ -15,21 +15,6 @@ from common.config.example import GEOMETRIES
 from monitor.painter.matrix import MatrixPainter
 from monitor.painter.cards import CardsPainter
 
-async def run_tk(root, painters, interval=0.05):
-    '''
-    Run a tkinter app in an asyncio event loop.
-    '''
-    try:
-        while True:
-            t = time.time()
-            for painter in painters:
-                painter.paint()
-            root.update()
-            await asyncio.sleep(t+interval-time.time())
-    except tk.TclError as e:
-        if "application has been destroyed" not in e.args[0]:
-            raise
-
 
 PAINTERS = {
     MatrixGeometry: MatrixPainter,
@@ -37,40 +22,62 @@ PAINTERS = {
 }
 
 
-class PackCanvas(object):
-    def __init__(self, canvases, ind):
-        self.canvases = canvases
-        self.canvas = canvases[ind]
-
-    def __call__(self):
-        for c in self.canvases:
-            c.pack_forget()
-        self.canvas.pack(side="bottom")
+async def run_tk(root, geos, radio_buttons, var, interval=0.05):
+    '''
+    Run a tkinter app in an asyncio event loop.
+    '''
+    try:
+        old_val = -1
+        old_w = -1
+        old_h = -1
+        c = tk.Canvas(root)
+        painter = None
+        while True:
+            t = time.time()
+            root.update()
+            val = var.get()
+            w = root.winfo_width()
+            h = root.winfo_height()
+            if val != old_val or w != old_w or h != old_h:
+                old_val = val
+                old_w = w
+                old_h = h
+                c.delete("all")
+                c.pack_forget()
+                del c
+                del painter
+                y = max(r.winfo_y() for r in radio_buttons)
+                c = tk.Canvas(root, width=w, height=h-y, bd=-1, bg="#000000")
+                c.pack(side="bottom")
+                geo = geos[val]
+                root.update()
+                painter = PAINTERS[type(geo)](c, geo)
+            painter.paint()
+            root.update()
+            await asyncio.sleep(t+interval-time.time())
+    except tk.TclError as e:
+        if "application has been destroyed" not in e.args[0]:
+            raise
 
 
 def main():
     master = tk.Tk()
     var = tk.IntVar()
     geos = list(GEOMETRIES.items())
-    canvases = [tk.Canvas(master=master, height=300, width=600) for i in \
-        range(len(geos))]
     radio_buttons = [tk.Radiobutton(
         master=master,
         text="{}: {}".format(type(geo).__name__, name),
         variable=var,
         value=i,
-        command=PackCanvas(canvases, i)
     ) for (i, (name, geo)) in enumerate(geos)]
     for r in radio_buttons:
         r.pack(side="top")
-    PackCanvas(canvases, 0)()
-    painters = [PAINTERS[type(geo)](
-            canvas=canvases[i],
-            geometry=geo,
-            h=300,
-            w=600,
-        ) for i, (name, geo) in enumerate(geos)]
-    asyncio.ensure_future(run_tk(master, painters))
+    asyncio.ensure_future(run_tk(
+        root=master,
+        geos=[geo for (name, geo) in geos],
+        radio_buttons=radio_buttons,
+        var=var,
+    ))
     el = asyncio.get_event_loop()
     asyncio.ensure_future(el.create_datagram_endpoint(
         LightStateDP,

@@ -69,8 +69,7 @@ class CardsPainter(Painter):
         for (h, card), color in self._geometry.items():
             self._canvas.itemconfig(self._stripes[h, card], fill=str(color))
 
-    def update_size(self, h, w):
-        self._canvas.delete("all")
+    def _update_size(self, h, w):
         self._stripes = {}
         for (house, card), color in self._geometry.items():
             l = []
