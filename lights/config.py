@@ -7,6 +7,9 @@ def get_config(pi_id):
             "MATRIX": {
                 "matrix0": True,
             },
+            "CARDS": {
+                "cards1": True,
+            },
             "DEBUG": {
                 #"debug1": ["l00", "l10", "l01", "l11"],
             },

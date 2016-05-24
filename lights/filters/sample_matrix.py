@@ -5,7 +5,7 @@ from lights.state_gen import DELTA
 from common.color import RGBColor
 
 @filter_for(MatrixGeometry)
-def sample_filter(upstream):
+def sample_matrix_filter(upstream):
     accx = 0
     accy = 0
     periodx = 0.8
