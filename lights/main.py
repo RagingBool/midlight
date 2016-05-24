@@ -11,8 +11,6 @@ import itertools
 from lights.config import get_config
 from lights.state_gen.gen import STATE_GEN
 from lights.aitertools import to_aiter, atee, azip, consume
-from lights.filters.sample_matrix import sample_matrix_filter
-from lights.filters.sample_cards import sample_cards_filter
 from lights.util import AsyncAppliedFilter
 from lights.output import DebugOutputDevice, MonitorOutputDevice
 from common.config.example import GEOMETRIES
@@ -35,16 +33,11 @@ def main():
     dl = {}
     outs = []
     geos_and_filters = []
-    for geo_id, monitor in conf["MATRIX"].items():
-        matrix = GEOMETRIES[geo_id]
-        geos_and_filters.append((matrix, (sample_matrix_filter(),)))
+    for geo_id, (filter, monitor) in conf["OUTPUTS"].items():
+        geo = GEOMETRIES[geo_id]
+        geos_and_filters.append((geo, (filter,)))
         if monitor:
-            outs.append(MonitorOutputDevice(matrix))
-    for geo_id, monitor in conf["CARDS"].items():
-        cards = GEOMETRIES[geo_id]
-        geos_and_filters.append((cards, (sample_cards_filter(),)))
-        if monitor:
-            outs.append(MonitorOutputDevice(cards))
+            outs.append(MonitorOutputDevice(geo))
     for key, l in conf["DEBUG"].items():
         outs.append(DebugOutputDevice(key, l))
     el = asyncio.get_event_loop()
