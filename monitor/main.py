@@ -10,8 +10,10 @@ import time
 
 from monitor.input import LightStateDP
 from common.geometry.matrix import MatrixGeometry
+from common.geometry.cards import CardsGeometry
 from common.config.example import GEOMETRIES
 from monitor.painter.matrix import MatrixPainter
+from monitor.painter.cards import CardsPainter
 
 async def run_tk(root, painters, interval=0.05):
     '''
@@ -31,6 +33,7 @@ async def run_tk(root, painters, interval=0.05):
 
 PAINTERS = {
     MatrixGeometry: MatrixPainter,
+    CardsGeometry: CardsPainter,
 }
 
 
