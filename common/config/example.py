@@ -6,8 +6,8 @@ GEOMETRIES = {
         [(0, 0, x, y) for x in range(60)] \
         for y in range(30)
     ]),
-    "cards0": CardsGeometry({
-        h: {c: (0, 0, x, y) for x, c in enumerate(HOUSES[h])} \
+    "cards1": CardsGeometry({
+        h: {c: (0, 1, x, y) for x, c in enumerate(HOUSES[h])} \
         for y, h in enumerate(HOUSES_KEYS)
     }),
 }
