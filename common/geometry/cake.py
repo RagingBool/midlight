@@ -125,7 +125,7 @@ class CakeGeometry(Geometry):
 
     @property
     def ids(self):
-        for h, c in KEYS:
+        for l, p, d in KEYS:
             yield self._lights[l][p][d]
 
     __iter__ = keys
