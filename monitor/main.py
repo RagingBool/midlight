@@ -11,14 +11,17 @@ import time
 from monitor.input import LightStateDP
 from common.geometry.matrix import MatrixGeometry
 from common.geometry.cards import CardsGeometry
+from common.geometry.cake import CakeGeometry
 from common.config.example import GEOMETRIES
 from monitor.painter.matrix import MatrixPainter
 from monitor.painter.cards import CardsPainter
+from monitor.painter.cake import CakePainter
 
 
 PAINTERS = {
     MatrixGeometry: MatrixPainter,
     CardsGeometry: CardsPainter,
+    CakeGeometry: CakePainter,
 }
 
 
