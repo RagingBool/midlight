@@ -1,6 +1,7 @@
 
 from monitor.painter.base import Painter
-
+from common.geometry.cards import E_L, E_R, E_B, T, T_L, T_T, T_R, L_1, R_1, \
+    L_2, R_2, L_3, R_3
 
 class P(object):
     def __init__(self, x, y):
@@ -34,32 +35,32 @@ TRIANGLE = [P(0,0), P(0.5, (3**0.5)/2), P(1, 0), P(0,0)]
 REV_TRIANGLE = [P(0,0), P(-0.5, (3**0.5)/2), P(0.5, (3**0.5)/2), P(0,0)]
 
 EDGES = [
-    "e_l", # edge left
-    "e_r", # edge right
-    "e_b", # edge bottom
+    E_L,  # edge left
+    E_R,  # edge right
+    E_B,  # edge bottom
 ]
 
 ONE = dict(zip(EDGES, zip(TRIANGLE, TRIANGLE[1:])))
 
 T2 = [p*2 for p in TRIANGLE]
 TWO = dict(zip(EDGES, zip(T2, T2[1:])))
-TWO["t"] = [P(1,0) + p for p in REV_TRIANGLE] # triangle
+TWO[T] = [P(1,0) + p for p in REV_TRIANGLE]  # triangle
 
 T3 = [p*3 for p in TRIANGLE]
 THREE = dict(zip(EDGES, zip(T3, T3[1:])))
 THREE.update(dict(zip([
-    "t_l", # triangle left
-    "t_t", # triangle top
-    "t_r", # triangle right
+    T_L,  # triangle left
+    T_T,  # triangle top
+    T_R,  # triangle right
 ], [[P(1,0)+p_1+p_2 for p_1 in REV_TRIANGLE] for p_2 in TRIANGLE[:3]])))
 
 HOUSES = {
-    "1l": {c: [p for p in ps] for (c, ps) in ONE.items()},
-    "2l": {c: [P(1+1,0) + p for p in ps] for (c, ps) in TWO.items()},
-    "3l": {c: [P(1+1+2+1,0) + p for p in ps] for (c, ps) in THREE.items()},
-    "3r": {c: [P(1+1+2+1+3+1,0) + p for p in ps] for (c, ps) in THREE.items()},
-    "2r": {c: [P(1+1+2+1+3+1+3+1,0) + p for p in ps] for (c, ps) in TWO.items()},
-    "1r": {c: [P(1+1+2+1+3+1+3+1+2+1,0) + p for p in ps] for (c, ps) in ONE.items()},
+    L_1: {c: [p for p in ps] for (c, ps) in ONE.items()},
+    L_2: {c: [P(1+1,0) + p for p in ps] for (c, ps) in TWO.items()},
+    L_3: {c: [P(1+1+2+1,0) + p for p in ps] for (c, ps) in THREE.items()},
+    R_3: {c: [P(1+1+2+1+3+1,0) + p for p in ps] for (c, ps) in THREE.items()},
+    R_2: {c: [P(1+1+2+1+3+1+3+1,0) + p for p in ps] for (c, ps) in TWO.items()},
+    R_1: {c: [P(1+1+2+1+3+1+3+1+2+1,0) + p for p in ps] for (c, ps) in ONE.items()},
 }
 
 
