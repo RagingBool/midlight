@@ -1,35 +1,8 @@
 
-from monitor.painter.base import Painter
+from monitor.painter.base import Painter, P
 from common.geometry.cards import E_L, E_R, E_B, T, T_L, T_T, T_R, L_1, R_1, \
     L_2, R_2, L_3, R_3
 
-class P(object):
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-
-    def __iadd__(self, o):
-        self.x += o.x
-        self.y += o.y
-        return self
-
-    def __add__(self, o):
-        n = P(self.x, self.y)
-        n += o
-        return n
-
-    def __repr__(self):
-        return "P({}, {})".format(self.x, self.y)
-
-    def __imul__(self, m):
-        self.x *= m
-        self.y *= m
-        return self
-
-    def __mul__(self, m):
-        n = P(self.x, self.y)
-        n *= m
-        return n
 
 TRIANGLE = [P(0,0), P(0.5, (3**0.5)/2), P(1, 0), P(0,0)]
 REV_TRIANGLE = [P(0,0), P(-0.5, (3**0.5)/2), P(0.5, (3**0.5)/2), P(0,0)]
