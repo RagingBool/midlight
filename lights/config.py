@@ -8,7 +8,7 @@ from lights.filters.sample_cake import sample_cake_filter
 def get_config(pi_id):
     if pi_id == 1:
         return {
-            "OUTPUTS": {
+            "FILTERS": {
                 "matrix0": (sample_matrix_filter(), True),
                 "cards1": (sample_cards_filter(), True),
                 "cake2": (sample_cake_filter(), True),

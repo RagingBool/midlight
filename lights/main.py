@@ -33,7 +33,7 @@ def main():
     dl = {}
     outs = []
     geos_and_filters = []
-    for geo_id, (filter, monitor) in conf["OUTPUTS"].items():
+    for geo_id, (filter, monitor) in conf["FILTERS"].items():
         geo = GEOMETRIES[geo_id]
         geos_and_filters.append((geo, (filter,)))
         if monitor:
