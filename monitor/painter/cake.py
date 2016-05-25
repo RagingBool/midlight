@@ -80,8 +80,8 @@ class CakePainter(Painter):
         for (layer, position, direction), color in self._geometry.items():
             l = []
             for p in CAKE[layer][position][direction]:
-                l.append(int(w/2 + (p.x * ((w/4.1)-6))) + 3)
-                l.append(int(h/2 - (p.y * ((h/8.2)-6))) - 3)
+                l.append(int(w/2 + (p.x * (w-6) / 4.2)))
+                l.append(int(h/2 - (p.y * (h-6) / 8.4)))
             self._stripes[layer, position, direction] = self._canvas.create_line(
                 *l,
                 width=6,

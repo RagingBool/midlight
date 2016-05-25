@@ -48,8 +48,8 @@ class CardsPainter(Painter):
         for (house, card), color in self._geometry.items():
             l = []
             for p in HOUSES[house][card]:
-                l.append(int(p.x * ((w/(1+1+2+1+3+1+3+1+2+1+1))-6)) + 3)
-                l.append(int(h - (p.y * ((h/3)-6))) - 3)
+                l.append(int(p.x * (w-6) / (1+1+2+1+3+1+3+1+2+1+1)) + 3)
+                l.append(int(h - (p.y * (h-6) / (3*(3**0.5)/2))) - 3)
             self._stripes[house, card] = self._canvas.create_line(
                 *l,
                 width=6,
