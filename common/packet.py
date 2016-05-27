@@ -16,10 +16,18 @@ def parse_input(buf):
         raise TypeError("Bad type for buffer.")
     if len(buf) < 6:
         raise ValueError("Buffer with bad size: {}".format(buf))
-    type = INPUTS[buf[0]]
+    t = INPUTS[buf[0]]
+    dtype = INPUT_DTYPES[t]
     priority = buf[1]
-    value = struct.unpack(">I", buf[2:6])
-    return type, priority, value
+    if dtype == bool:
+        value = bool(struct.unpack(">I", buf[2:6]))
+    elif dtype == int:
+        value = struct.unpack(">I", buf[2:6])
+    elif dtype == float:
+        value = struct.unpack(">f", buf[2:6])
+    else:
+        raise RuntimeError("Bad dtype in config?")
+    return t, priority, value
 
 
 LIGHT_PACKET = "LIGHT"
@@ -61,16 +69,30 @@ def serialize_light(light_ids):
     return bytes(b)
 
 
-def serialize_input(type, priority, value):
-    return bytes([RINPUTS[type], priority]) + struct.pack(">I", value)
+def serialize_input(t, priority, value):
+    dtype = INPUT_DTYPES[t]
+    if dtype == float:
+        bvalue = struct.unpack(">f", value)
+    elif dtype == bool:
+        bvalue = bool(struct.pack(">I", value))
+    elif dtype == int:
+        bvalue = struct.unpack(">I", value)
+    else:
+        raise RuntimeError("Bad dtype in config?")
+    return bytes([RPACKETS[INPUT_PACKET], RINPUTS[type], priority]) + bvalue
 
 
-INPUT_STROBE = 0
-INPUT_HUE = 1
+STROBE = "STROBE"
+HUE = "HUE"
 
 INPUTS = [
-    INPUT_STROBE,
-    INPUT_HUE,
+    STROBE,
+    HUE,
 ]
 
 RINPUTS = {v: i for i, v in enumerate(INPUTS)}
+
+INPUT_DTYPES = {
+    STROBE: float,
+    HUE: float,
+}
