@@ -11,10 +11,23 @@ def parse_light(buf):
         Lights[ID(buf[i:i+4])].iparse(buf[i+4:i+8])
 
 
+def parse_input(buf):
+    if not isinstance(buf, (bytes, bytearray)):
+        raise TypeError("Bad type for buffer.")
+    if len(buf) < 6:
+        raise ValueError("Buffer with bad size: {}".format(buf))
+    type = INPUTS[buf[0]]
+    priority = buf[1]
+    value = struct.unpack(">I", buf[2:6])
+    return type, priority, value
+
+
 LIGHT_PACKET = 0
+INPUT_PACKET = 1
 
 PARSERS = {
     LIGHT_PACKET: parse_light,
+    INPUT_PACKET: parse_input,
 }
 
 
@@ -39,3 +52,18 @@ def serialize_light(light_ids):
         b[1+8*i:1+8*i+4] = light_id
         b[1+8*i+4:1+8*i+8] = bytes(Lights[ID(light_id)])
     return bytes(b)
+
+
+def serialize_input(type, priority, value):
+    return bytes([RINPUTS[type], priority]) + struct.pack(">I", value)
+
+
+INPUT_STROBE = 0
+INPUT_HUE = 1
+
+INPUTS = [
+    INPUT_STROBE,
+    INPUT_HUE,
+]
+
+RINPUTS = {v: i for i, v in enumerate(INPUTS)}
