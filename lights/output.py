@@ -55,3 +55,17 @@ class MonitorOutputDevice(OutputDevice):
         except OSError:
             self._s.sendto(data, ("127.255.255.255", 9999))
 
+
+class OPCOutputDevice(OutputDevice):
+    """
+    Send packets to OPC server. Input lights should be in the same order as
+    they appear in the configuration of the fadecandy-server.
+    """
+    def __init__(self, addr, lights):
+        lights = [ID(light) for light in lights]
+        self._lights = lights
+        self._client = Client(addr)
+     
+    async def emit(self):
+        pixels = [tuple(f2b(c) for c in Lights[l]) for l in self._lights]
+        self._client.put_pixels(pixels)
