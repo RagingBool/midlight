@@ -16,6 +16,9 @@ def get_config(pi_id):
             "DEBUG": {
                 #"debug1": ["l00", "l10", "l01", "l11"],
             },
+            "OPC": {
+                "127.0.0.1:7890": [(0, 0, i//30, i%30) for i in range(60*30)],
+            }
         }
 
 FRAME_RATE = 30

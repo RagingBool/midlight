@@ -12,7 +12,7 @@ from lights.config import get_config
 from lights.state_gen.gen import STATE_GEN
 from lights.aitertools import to_aiter, atee, azip, consume
 from lights.util import AsyncAppliedFilter
-from lights.output import DebugOutputDevice, MonitorOutputDevice
+from lights.output import DebugOutputDevice, MonitorOutputDevice, OPCOutputDevice
 from common.config.example import GEOMETRIES
 
 
@@ -40,6 +40,8 @@ def main():
             outs.append(MonitorOutputDevice(geo))
     for key, l in conf["DEBUG"].items():
         outs.append(DebugOutputDevice(key, l))
+    for addr, l in conf["OPC"].items():
+        outs.append(OPCOutputDevice(addr, l))
     el = asyncio.get_event_loop()
     el.run_until_complete(run(STATE_GEN, geos_and_filters, outs))
 
