@@ -12,7 +12,8 @@ from lights.config import get_config
 from lights.state_gen.gen import STATE_GEN
 from lights.aitertools import to_aiter, atee, azip, consume
 from lights.util import AsyncAppliedFilter
-from lights.output import DebugOutputDevice, MonitorOutputDevice, OPCOutputDevice
+from lights.output import DebugOutputDevice, MonitorOutputDevice, \
+    OPCOutputDevice, DMXOutputDevice
 from common.config.example import GEOMETRIES
 
 
@@ -42,6 +43,13 @@ def main():
         outs.append(DebugOutputDevice(key, l))
     for addr, l in conf["OPC"].items():
         outs.append(OPCOutputDevice(addr, l))
+    for (cid, unid, offset), l in conf["DMX"].items():
+        outs.append(DMXOutputDevice(
+            component_identifier=cid,
+            universe_id=unid,
+            offset=offset,
+            lights=l,
+        ))
     el = asyncio.get_event_loop()
     el.run_until_complete(run(STATE_GEN, geos_and_filters, outs))
 
