@@ -83,10 +83,12 @@ def serialize_input(t, priority, value):
 
 STROBE = "STROBE"
 HUE = "HUE"
+HUE_ALPHA = "HUE_ALPHA"
 
 INPUTS = [
     STROBE,
     HUE,
+    HUE_ALPHA,
 ]
 
 RINPUTS = {v: i for i, v in enumerate(INPUTS)}
@@ -94,4 +96,5 @@ RINPUTS = {v: i for i, v in enumerate(INPUTS)}
 INPUT_DTYPES = {
     STROBE: float,
     HUE: float,
+    HUE_ALPHA: float,
 }
