@@ -34,11 +34,11 @@ def main():
     dl = {}
     outs = []
     geos_and_filters = []
-    for geo_id, (filter, monitor) in conf["FILTERS"].items():
+    lights = []
+    for geo_id, filters in conf["FILTERS"].items():
         geo = GEOMETRIES[geo_id]
-        geos_and_filters.append((geo, (filter,)))
-        if monitor:
-            outs.append(MonitorOutputDevice(geo))
+        lights += list(geo.ids)
+        geos_and_filters.append((geo, filters))
     for key, l in conf["DEBUG"].items():
         outs.append(DebugOutputDevice(key, l))
     for addr, l in conf["OPC"].items():
@@ -50,6 +50,7 @@ def main():
             offset=offset,
             lights=l,
         ))
+    outs.append(MonitorOutputDevice(lights))
     el = asyncio.get_event_loop()
     el.run_until_complete(run(STATE_GEN, geos_and_filters, outs))
 

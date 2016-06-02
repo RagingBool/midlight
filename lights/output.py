@@ -38,18 +38,16 @@ class DebugOutputDevice(OutputDevice):
 
 class MonitorOutputDevice(OutputDevice):
     """
-    Outputs packets of entire geometries for the monitoring computer.
+    Outputs packets of lights for the monitoring computer.
     """
-    def __init__(self, geo):
-        if not isinstance(geo, Geometry):
-            raise TypeError("Geometry should be a geometry.")
-        self._geo = geo
+    def __init__(self, lights):
+        self._lights = lights
         self._s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self._s.bind(("", 0))
         self._s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
     async def emit(self):
-        data = serialize_light(self._geo)
+        data = serialize_light(self._lights)
         try:
             self._s.sendto(data, ("255.255.255.255", 9999))
         except OSError:

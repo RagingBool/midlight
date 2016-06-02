@@ -9,9 +9,9 @@ def get_config(pi_id):
     if pi_id == 1:
         return {
             "FILTERS": {
-                "matrix0": (sample_matrix_filter(), True),
-                "cards1": (sample_cards_filter(), True),
-                "cake2": (sample_cake_filter(), True),
+                "matrix0": (sample_matrix_filter(), ),
+                "cards1": (sample_cards_filter(), ),
+                "cake2": (sample_cake_filter(), ),
             },
             "DEBUG": {
                 #"debug1": ["l00", "l10", "l01", "l11"],
