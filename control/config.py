@@ -1,0 +1,5 @@
+
+FRAME_RATE = 30
+PRIORITY = 1
+KEEP_ALIVE = 30  # frames
+MAX_STROBE = 1.0  # secs
