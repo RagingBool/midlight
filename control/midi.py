@@ -19,7 +19,7 @@ def dispatch_callbacks(input_name, pads, knobs, ioloop, obj):
                 value = 0
             f(press=press, value=value, channel=message.channel)
         elif message.type == "control_change":
-            i = message.control
+            i = message.control - 1
             f = knobs_ts[i]
             value = message.value
             f(value=value, channel=message.channel)
