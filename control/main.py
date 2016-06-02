@@ -21,7 +21,7 @@ def main():
     el = asyncio.get_event_loop()
     out = Outputer(FRAME_RATE, KEEP_ALIVE, PRIORITY)
     dispatch_callbacks(pads=[
-        (strobe, conv_strobe(MAX_STROBE)),
+        ("strobe", conv_strobe(MAX_STROBE)),
         None,
         None,
         None,
@@ -30,8 +30,8 @@ def main():
         None,
         None,
     ], knobs = [
-        (hue, conv_hue),
-        (hue_alpha, conv_alpha),
+        ("hue", conv_hue),
+        ("hue_alpha", conv_alpha),
         None,
         None,
         None,
