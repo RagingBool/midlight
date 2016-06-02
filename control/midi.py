@@ -5,8 +5,8 @@ import mido
 from control.lpd8 import MIDI_NAME, PADS, RPADS
 
 def dispatch_callbacks(pads, knobs, ioloop, obj):
-    pads_ts = [threadsafe_setattr(ioloop, obj, attr, f) for attr, f in pads]
-    knobs_ts = [threadsafe_setattr(ioloop, obj, attr, f) for attr, f in knobs]
+    pads_ts = [threadsafe_setattr(ioloop, obj, tup[0], tup[1]) for tup in pads if tup]
+    knobs_ts = [threadsafe_setattr(ioloop, obj, tup[0], tup[1]) for tup in knobs if tup]
     def inner(message):
         if message.type in ["note_on", "note_off"]:
             i = RPADS[message.channel][message.note]
