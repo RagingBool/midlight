@@ -44,15 +44,15 @@ def main():
 
 
 def conv_strobe(max_strobe):
-    def inner(val):
-        return max_strobe * val / 127
+    def inner(value, channel, press):
+        return max_strobe * value / 127
     return inner
 
-def conv_hue(val):
-    return val / 128
+def conv_hue(value, channel):
+    return value / 128
 
-def conv_alpha(val):
-    return val / 127
+def conv_alpha(value, channel):
+    return value / 127
 
 
 if __name__ == "__main__":
