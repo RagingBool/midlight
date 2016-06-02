@@ -67,7 +67,6 @@ class Outputer(object):
         self._framecount += 1
         
         if self._framecount % self._keepalive == 0:
-            self._send_packet(STROBE, self._strobe)
             if self._hue_alpha > 0.0:
                 self._send_packet(HUE, self._hue)
                 self._send_packet(HUE_ALPHA, self._hue_alpha)
