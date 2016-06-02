@@ -4,6 +4,8 @@ import sys
 from lights.filters.sample_matrix import sample_matrix_filter
 from lights.filters.sample_cards import sample_cards_filter
 from lights.filters.sample_cake import sample_cake_filter
+from lights.filters.cake_runner import cake_runner_filter
+from lights.filters.randomizer import RandomizerFilter
 
 def get_config(pi_id):
     if pi_id == 1:
@@ -11,7 +13,11 @@ def get_config(pi_id):
             "FILTERS": {
                 "matrix0": (sample_matrix_filter(), ),
                 "cards1": (sample_cards_filter(), ),
-                "cake2": (sample_cake_filter(), ),
+                "cake2": (RandomizerFilter(
+                    sample_cake_filter(),
+                    cake_runner_filter(),
+                    durations=(3, 4),
+                     ),)
             },
             "DEBUG": {
                 #"debug1": ["l00", "l10", "l01", "l11"],
