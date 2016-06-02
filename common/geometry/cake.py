@@ -117,7 +117,7 @@ class CakeGeometry(Geometry):
             yield k, self[k]
 
     def keys(self):
-        return set(KEYS)
+        return iter(KEYS)
 
     def values(self):
         for k in KEYS:
