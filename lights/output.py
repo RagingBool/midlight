@@ -1,11 +1,15 @@
 
 import sys
 import socket
+import itertools
 
 from lights.aitertools import aiter, anext
 from common.geometry.base import Geometry
 from common.packet import serialize_light
 from common.light import Lights, ID
+from common.color import f2b
+from lights.opc import Client
+from lights.e131client import E1_31DmxUniverse
 
 class OutputDevice(object):
     """
