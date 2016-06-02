@@ -9,7 +9,8 @@ import asyncio
 import itertools
 
 from control.output import Outputer
-from control.config import FRAME_RATE, KEEP_ALIVE, PRIORITY, MAX_STROBE
+from control.config import FRAME_RATE, KEEP_ALIVE, PRIORITY, MAX_STROBE, \
+    INPUT_NAME
 from control.midi import dispatch_callbacks
 
 async def run(out):
@@ -38,7 +39,7 @@ def main():
         None,
         None,
         None,
-    ], ioloop=el, obj=out)
+    ], ioloop=el, obj=out, input_name=INPUT_NAME)
     el.run_until_complete(run(out))
 
 

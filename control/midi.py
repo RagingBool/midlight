@@ -4,7 +4,7 @@ import mido
 
 from control.lpd8 import MIDI_NAME, PADS, RPADS
 
-def dispatch_callbacks(pads, knobs, ioloop, obj):
+def dispatch_callbacks(input_name, pads, knobs, ioloop, obj):
     pads_ts = [threadsafe_setattr(ioloop, obj, tup[0], tup[1]) for tup in pads if tup]
     knobs_ts = [threadsafe_setattr(ioloop, obj, tup[0], tup[1]) for tup in knobs if tup]
     def inner(message):
@@ -23,7 +23,7 @@ def dispatch_callbacks(pads, knobs, ioloop, obj):
             f = knobs_ts[i]
             value = message.value
             f(value=value, channel=message.channel)
-    port = mido.open_input(callback=inner)
+    port = mido.open_input(name=input_name, callback=inner)
     return port
 
 
