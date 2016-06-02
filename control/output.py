@@ -1,6 +1,7 @@
 
 import time
 import asyncio
+import socket
 
 from common.packet import serialize_input, STROBE, HUE, HUE_ALPHA
 
