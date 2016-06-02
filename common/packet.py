@@ -1,4 +1,6 @@
 
+import struct
+
 from common.light import Lights, ID
 
 
@@ -71,14 +73,14 @@ def serialize_light(light_ids):
 def serialize_input(t, priority, value):
     dtype = INPUT_DTYPES[t]
     if dtype == float:
-        bvalue = struct.unpack(">f", value)
+        bvalue = struct.pack(">f", value)
     elif dtype == bool:
         bvalue = bool(struct.pack(">I", value))
     elif dtype == int:
-        bvalue = struct.unpack(">I", value)
+        bvalue = struct.pack(">I", value)
     else:
         raise RuntimeError("Bad dtype in config?")
-    return bytes([RPACKETS[INPUT_PACKET], RINPUTS[type], priority]) + bvalue
+    return bytes([RPACKETS[INPUT_PACKET], RINPUTS[t], priority]) + bvalue
 
 
 STROBE = "STROBE"
