@@ -42,7 +42,7 @@ class FixedDict(dict):
             raise ValueError("Invalid key.")
         if not type(value) == type(self[key]):
             raise TypeError("Invalid value type.")
-        super().__setitem__(key, type())
+        super().__setitem__(key, value)
 
 
 Lights = FixedDict()
