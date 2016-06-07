@@ -21,8 +21,8 @@ def assert_channel(c, name="", include_1=True):
     if not isinstance(c, (float, int)):
         raise TypeError("{} channel should be numeric.".format(name))
     if not (0 <= c < 1) and not (include_1 and c == 1):
-        raise ValueError("{} channel should be in range [0,1{}".format(
-            name, "]" if include_1 else ")"))
+        raise ValueError("{} channel should be in range [0,1{} instead of {}".format(
+            name, "]" if include_1 else ")", c))
     return float(c)
 
 
@@ -213,7 +213,7 @@ def hsi_to_rgb(hue, saturation, intensity):
         c2 = ci * (1 - cs)
     
     # This is to avoid clipping of colour channels with too high intensity.
-    m = max(c1, c2, c2, 1)
+    m = max(c1, c2, c3, 1)
 
     return c1 / m, c2 / m, c3 / m
 
