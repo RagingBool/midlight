@@ -78,17 +78,15 @@ class DMXOutputDevice(OutputDevice):
     Send packets to DMX via e1.31. Input lights should be in the same order as
     they are connected to the box.
     """
-    def __init__(self, universe_id, component_identifier, offset, lights):
-        lights = [ID(light) for light in lights]
-        self._lights = lights
+    def __init__(self, universe_id, component_identifier, offset_lights):
+        offset_lights = {offset: [ID(light) for light in lights] for offset, lights in offset_lights.items()}
         self._universe = E1_31DmxUniverse(universe_id=universe_id, 
             component_identifier=component_identifier) 
-        self._offset = offset
-        if len(lights) + offset > 512:
-            raise ValueError("Too many lights for one universe.")
+        self._offset_lights = offset_lights
 
     async def emit(self):
         values = bytearray(512)
-        for i, c in enumerate(itertools.chain(*[Lights[l] for l in self._lights])):
-            values[i + self._offset] = f2b(c)
+        for offset, lights in self._offset_lights.items():
+            for i, c in enumerate(itertools.chain(*[Lights[l] for l in lights])):
+                values[i + offset] = f2b(c)
         self._universe.send_frame(values)

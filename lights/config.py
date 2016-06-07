@@ -26,7 +26,7 @@ def get_config(pi_id):
                 "127.0.0.1:7890": [(0, 0, i//30, i%30) for i in range(60*30)],
             },
             "DMX": {
-                ("936DA01F-9ABD-4d9d-80C7-02AF85C822A8", 1, 0): [(0, 1, i//3, i%3) for i in range(18)],
+                ("936DA01F-9ABD-4d9d-80C7-02AF85C822A8", 1): {0: [(0, 1, i//3, i%3) for i in range(18)]},
             },
         }
 

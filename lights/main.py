@@ -43,12 +43,11 @@ def main():
         outs.append(DebugOutputDevice(key, l))
     for addr, l in conf["OPC"].items():
         outs.append(OPCOutputDevice(addr, l))
-    for (cid, unid, offset), l in conf["DMX"].items():
+    for (cid, unid), ol in conf["DMX"].items():
         outs.append(DMXOutputDevice(
             component_identifier=cid,
             universe_id=unid,
-            offset=offset,
-            lights=l,
+            offset_lights=ol,
         ))
     outs.append(MonitorOutputDevice(lights))
     el = asyncio.get_event_loop()
