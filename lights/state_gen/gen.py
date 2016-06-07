@@ -31,3 +31,14 @@ class StateGen(object):
         return {
             DELTA: delta,
         }
+
+
+class StateGenDP(asyncio.DatagramProtocol):
+    def __init__(self, state_gen):
+        self._state_gen = state_gen
+
+    def datagram_received(self, data, addr):
+        p = parse(data, [INPUT_PACKET])
+        if p is not None:
+            t, priority, value = p
+            self._state_gen.dispatch(t, priority, value)

@@ -7,9 +7,10 @@ sys.path.append(os.path.split(os.path.split(os.path.abspath(__file__))[0])[0])  
 
 import asyncio
 import itertools
+import functools
 
 from lights.config import get_config, FRAME_RATE
-from lights.state_gen.gen import StateGen
+from lights.state_gen.gen import StateGen, StateGenDP
 from lights.aitertools import to_aiter, atee, azip, consume
 from lights.util import AsyncAppliedFilter
 from lights.output import DebugOutputDevice, MonitorOutputDevice, \
@@ -52,6 +53,10 @@ def main():
     outs.append(MonitorOutputDevice(lights))
     state_gen = StateGen(FRAME_RATE)
     el = asyncio.get_event_loop()
+    asyncio.ensure_future(el.create_datagram_endpoint(
+        functools.partial(StateGenDP, state_gen),
+        local_addr=("0.0.0.0", 9999),
+    ))
     el.run_until_complete(run(state_gen, geos_and_filters, outs))
 
 if __name__ == "__main__":
