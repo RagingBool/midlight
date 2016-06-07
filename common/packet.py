@@ -22,11 +22,11 @@ def parse_input(buf):
     dtype = INPUT_DTYPES[t]
     priority = buf[1]
     if dtype == bool:
-        value = bool(struct.unpack(">I", buf[2:6]))
+        value = bool(struct.unpack(">I", buf[2:6])[0])
     elif dtype == int:
-        value = struct.unpack(">I", buf[2:6])
+        value = struct.unpack(">I", buf[2:6])[0]
     elif dtype == float:
-        value = struct.unpack(">f", buf[2:6])
+        value = struct.unpack(">f", buf[2:6])[0]
     else:
         raise RuntimeError("Bad dtype in config?")
     return t, priority, value
