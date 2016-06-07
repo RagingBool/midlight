@@ -49,8 +49,8 @@ HORIZONTALS = [
 ]
 
 LAYER_KEYS = [
-    VER,
     HOR,
+    VER,
     CDL,
 ]
 
@@ -66,8 +66,8 @@ LAYER = {
 }
 
 CAKE_KEYS = [
-    BOT,
     TOP,
+    BOT,
 ]
 
 CAKE = {
