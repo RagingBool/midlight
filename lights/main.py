@@ -8,8 +8,8 @@ sys.path.append(os.path.split(os.path.split(os.path.abspath(__file__))[0])[0])  
 import asyncio
 import itertools
 
-from lights.config import get_config
-from lights.state_gen.gen import STATE_GEN
+from lights.config import get_config, FRAME_RATE
+from lights.state_gen.gen import StateGen
 from lights.aitertools import to_aiter, atee, azip, consume
 from lights.util import AsyncAppliedFilter
 from lights.output import DebugOutputDevice, MonitorOutputDevice, \
@@ -18,7 +18,7 @@ from common.config.example import GEOMETRIES
 
 
 async def run(state_gen, geos_and_filters, outs):
-    state_gens = list(atee(STATE_GEN, len(geos_and_filters)))
+    state_gens = list(atee(state_gen, len(geos_and_filters)))
     for i, (geo, filters) in enumerate(geos_and_filters):
         upstream = azip(to_aiter(itertools.repeat(geo)), state_gens[i])
         for filter in filters:
@@ -50,8 +50,9 @@ def main():
             offset_lights=ol,
         ))
     outs.append(MonitorOutputDevice(lights))
+    state_gen = StateGen(FRAME_RATE)
     el = asyncio.get_event_loop()
-    el.run_until_complete(run(STATE_GEN, geos_and_filters, outs))
+    el.run_until_complete(run(state_gen, geos_and_filters, outs))
 
 if __name__ == "__main__":
     main()

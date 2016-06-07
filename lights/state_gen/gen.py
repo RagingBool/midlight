@@ -3,9 +3,8 @@ import time
 import asyncio
 
 from lights.state_gen.consts import DELTA
-from lights.config import FRAME_RATE
 
-class _StateGen(object):
+class StateGen(object):
     """
     This class, a singleton, is an aiter responsible for aggregating the inputs
     and creating a coherent input state to be used by light managers.
@@ -32,5 +31,3 @@ class _StateGen(object):
         return {
             DELTA: delta,
         }
-
-STATE_GEN = _StateGen(FRAME_RATE)
