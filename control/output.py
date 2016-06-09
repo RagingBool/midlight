@@ -72,7 +72,7 @@ class Outputer(object):
                 self._send_packet(HUE_ALPHA, self._hue_alpha)
         
         if self._strobe > 0.0:
-            self._strobe -= delta
+            self._strobe -= delta * 0.25
         if self._strobe > 0.0:
             self._send_packet(STROBE, self._strobe)
 

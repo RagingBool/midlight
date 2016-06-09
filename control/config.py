@@ -2,5 +2,5 @@
 FRAME_RATE = 30
 PRIORITY = 1
 KEEP_ALIVE = 30  # frames
-MAX_STROBE = 1.0  # secs
+MAX_STROBE = 4.0  # secs
 INPUT_NAME = "LPD8 MIDI 1"
