@@ -16,7 +16,7 @@ def get_config(pi_id):
         return {
             "FILTERS": {
                 # "matrix0": (sample_matrix_filter(), ),
-                "cards1": (sample_cards_filter(), ),
+                "cards1": (sample_cards_filter(), hue_filter(), gamma_correction(1.1), strobe_filter()),
                 "cake2": (sample_cake_filter(), hue_filter(), gamma_correction(1.1), strobe_filter()),
                 # "cake2": (test_cake_filter(5, color=True), ),
                 # "cake2": (RandomizerFilter(
