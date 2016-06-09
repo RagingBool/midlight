@@ -15,7 +15,7 @@ def get_config(pi_id):
     if pi_id == 1:
         return {
             "FILTERS": {
-                "matrix0": (sample_matrix_filter(), ),
+                # "matrix0": (sample_matrix_filter(), ),
                 "cards1": (sample_cards_filter(), ),
                 "cake2": (sample_cake_filter(), hue_filter(), gamma_correction(1.1), strobe_filter()),
                 # "cake2": (test_cake_filter(5, color=True), ),
@@ -49,6 +49,29 @@ def get_config(pi_id):
                         (0, 2, 2, 5),
                         (0, 2, 1, 4),
                     ],
+                    31+3: [
+                        (0, 1, 1, 0),
+                    ],
+                    31+3*3: [
+                        (0, 1, 1, 1),
+                        (0, 1, 2, 1),
+                        (0, 1, 2, 2),
+                        (0, 1, 2, 3),
+                        (0, 1, 0, 0),
+                        (0, 1, 2, 0),
+                    ],
+                    63+3*2: [
+                        (0, 1, 3, 2),
+                        (0, 1, 3, 3),
+                        (0, 1, 3, 1),
+                    ],
+                    63+3*6: [
+                        (0, 1, 4, 1),
+                        (0, 1, 3, 0),
+                        (0, 1, 4, 0),
+                        (0, 1, 5, 0),
+                    ],
+
                 },
                 ("936DA01F-9ABD-4d9d-80C7-02AF85C822A8", 3): {
                     0: [(0, 2, 128 | (i//2), (i%2)) for i in range(6)] + [
