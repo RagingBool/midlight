@@ -4,9 +4,7 @@ from common.geometry.base import Geometry
 from common.light import Lights, ID
 
 
-E_L = "E_L"  # edge left
-E_R = "E_R"  # edge right
-E_B = "E_B"  # edge bottom
+ES = "ES" # edges
 T = "T"  # triangle
 T_L = "T_L"  # triangle left
 T_T = "T_T"  # triangle top
@@ -19,22 +17,21 @@ L_3 = "L_3"  # left house of 3
 R_3 = "R_3"  # right house of 3
 
 
-EDGES = [
-    E_L,  # edge left
-    E_R,  # edge right
-    E_B,  # edge bottom
+
+ONE = [
+    ES,  # edges
 ]
 
-ONE = EDGES
-
-TWO = EDGES + [
+TWO = [
+    ES,  # edges
     T,  # triangle
 ]
 
-THREE = EDGES + [
+THREE = [
+    ES,  # edges
     T_L,  # triangle left
-    T_T,  # triangle top
     T_R,  # triangle right
+    T_T,  # triangle top
 ]
 
 HOUSES_KEYS = [
