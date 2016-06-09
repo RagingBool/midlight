@@ -8,6 +8,8 @@ from lights.filters.test_cake import test_cake_filter
 from lights.filters.cake_runner import cake_runner_filter
 from lights.filters.randomizer import RandomizerFilter
 from lights.filters.gamma import gamma_correction
+from lights.filters.hue import hue_filter
+from lights.filters.strobe import strobe_filter
 
 def get_config(pi_id):
     if pi_id == 1:
@@ -15,7 +17,7 @@ def get_config(pi_id):
             "FILTERS": {
                 "matrix0": (sample_matrix_filter(), ),
                 "cards1": (sample_cards_filter(), ),
-                "cake2": (sample_cake_filter(), gamma_correction(1.1)),
+                "cake2": (sample_cake_filter(), hue_filter(), gamma_correction(1.1), strobe_filter()),
                 # "cake2": (test_cake_filter(5, color=True), ),
                 # "cake2": (RandomizerFilter(
                     # sample_cake_filter(),
