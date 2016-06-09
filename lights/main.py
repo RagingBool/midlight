@@ -11,17 +11,30 @@ import functools
 
 from lights.config import get_config, FRAME_RATE
 from lights.state_gen.gen import StateGen, StateGenDP
-from lights.aitertools import to_aiter, atee, azip, consume
+from lights.aitertools import to_aiter, atee, azip, consume, anext, aiter
 from lights.util import AsyncAppliedFilter
 from lights.output import DebugOutputDevice, MonitorOutputDevice, \
     OPCOutputDevice, DMXOutputDevice
 from common.config.example import GEOMETRIES
 
 
+class CopyAiter(object):
+    def __init__(self, aiter):
+        self._aiter = aiter
+
+    async def __aiter__(self):
+        self._ait = await aiter(self._aiter)
+        return self
+
+    async def __anext__(self):
+        a = await anext(self._ait)
+        return a.copy()
+
+
 async def run(state_gen, geos_and_filters, outs):
     state_gens = list(atee(state_gen, len(geos_and_filters)))
     for i, (geo, filters) in enumerate(geos_and_filters):
-        upstream = azip(to_aiter(itertools.repeat(geo)), state_gens[i])
+        upstream = azip(to_aiter(itertools.repeat(geo)), CopyAiter(state_gens[i]))
         for filter in filters:
             upstream = AsyncAppliedFilter(filter, upstream)
         state_gens[i] = upstream
