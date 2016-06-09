@@ -11,7 +11,20 @@ from lights.e131client import E1_31DmxUniverse
 def main():
     universe_id = 3
     component_identifier = "936DA01F-9ABD-4d9d-80C7-02AF85C822A8"
-    offset = 0
+    e = E1_31DmxUniverse(universe_id=universe_id, component_identifier=component_identifier) 
+    b = bytearray(512)
+    # b[63 + 3*8] = 255
+    b = bytes([255 for i in range(512)])
+    e.send_frame(b)
+    universe_id = 2
+    component_identifier = "936DA01F-9ABD-4d9d-80C7-02AF85C822A8"
+    e = E1_31DmxUniverse(universe_id=universe_id, component_identifier=component_identifier) 
+    b = bytearray(512)
+    # b[63 + 3*8] = 255
+    b = bytes([255 for i in range(512)])
+    e.send_frame(b)
+    universe_id = 1
+    component_identifier = "936DA01F-9ABD-4d9d-80C7-02AF85C822A8"
     e = E1_31DmxUniverse(universe_id=universe_id, component_identifier=component_identifier) 
     b = bytearray(512)
     # b[63 + 3*8] = 255
