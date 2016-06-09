@@ -3,7 +3,7 @@ import time
 import asyncio
 import socket
 
-from common.packet import serialize_input, STROBE, HUE, HUE_ALPHA
+from common.packet import serialize_input, STROBE, HUE, HUE_ALPHA, INTENSITY, SATURATION
 
 class Outputer(object):
     """
@@ -25,6 +25,8 @@ class Outputer(object):
         self._hue = 0.0
         self._hue_alpha = 0.0
         self._strobe = 0.0
+        self._saturation = 0.0
+        self._intensity = 0.0
         self._keepalive = keepalive
 
     @property
@@ -35,6 +37,24 @@ class Outputer(object):
     def hue(self, hue):
         self._hue = hue
         self._send_packet(HUE, hue)
+
+    @property
+    def intensity(self):
+        return self._intensity
+
+    @intensity.setter
+    def intensity(self, intensity):
+        self._intensity = intensity
+        self._send_packet(INTENSITY, intensity)
+
+    @property
+    def saturation(self):
+        return self._saturation
+
+    @saturation.setter
+    def saturation(self, saturation):
+        self._saturation = saturation
+        self._send_packet(SATURATION, saturation)
 
     @property
     def hue_alpha(self):
@@ -70,6 +90,10 @@ class Outputer(object):
             if self._hue_alpha > 0.0:
                 self._send_packet(HUE, self._hue)
                 self._send_packet(HUE_ALPHA, self._hue_alpha)
+            if self._saturation < 1.0:
+                self._send_packet(SATURATION, self._saturation)
+            if self._intensity < 1.0:
+                self._send_packet(INTENSITY, self._intensity)
         
         if self._strobe > 0.0:
             self._strobe -= delta * 0.25

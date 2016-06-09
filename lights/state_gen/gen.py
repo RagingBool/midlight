@@ -3,7 +3,7 @@ import time
 import asyncio
 
 from lights.state_gen.consts import DELTA
-from common.packet import parse, INPUT_PACKET, STROBE, HUE, HUE_ALPHA
+from common.packet import parse, INPUT_PACKET, STROBE, HUE, HUE_ALPHA, INTENSITY, SATURATION
 
 class StateGen(object):
     """
@@ -21,6 +21,10 @@ class StateGen(object):
         self._hue = 0.0
         self._hue_alpha = None
         self._hue_wd = 0.0
+        self._intensity = 1.0
+        self._intensity_wd = 0.0
+        self._saturation = 1.0
+        self._saturation_wd = 0.0
 
     def dispatch(self, t, priority, value):
         if t == STROBE:
@@ -28,13 +32,18 @@ class StateGen(object):
         elif t == HUE:
             self._hue = value
             self._hue_wd = self._accu
+        elif t == INTENSITY:
+            self._intensity = value
+            self._intensity_wd = self._accu
+        elif t == SATURATION:
+            self._saturation = value
+            self._saturation_wd = self._accu
         elif t == HUE_ALPHA:
             if value == 0.0:
                 self._hue_alpha = None
             else:
                 self._hue_alpha = value
             self._hue_wd = self._accu
-            
 
     async def __aiter__(self):
         return self
@@ -53,10 +62,14 @@ class StateGen(object):
         if self._strobe is not None:
             d[STROBE] = self._strobe
             self._strobe = None
-        if self._hue_alpha is not None and self._hue_wd > self._accu - 1.0:
+        if self._saturation < 1.0 and self._saturation_wd > self._accu - 3.0:
+            d[SATURATION] = self._saturation
+        if self._intensity < 1.0 and self._intensity_wd > self._accu - 3.0:
+            d[INTENSITY] = self._intensity
+        if self._hue_alpha is not None and self._hue_wd > self._accu - 3.0:
             d[HUE] = self._hue
             d[HUE_ALPHA] = self._hue_alpha 
-        print("{}  \r".format(d), end="")
+        print("{!s: <80}\r".format(d), end="")
         return d
 
 

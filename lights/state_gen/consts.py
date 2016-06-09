@@ -1,3 +1,3 @@
 
 DELTA = "DELTA"
-from common.packet import STROBE, HUE, HUE_ALPHA
+from common.packet import STROBE, HUE, HUE_ALPHA, INTENSITY, SATURATION

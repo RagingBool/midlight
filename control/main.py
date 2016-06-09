@@ -33,8 +33,8 @@ def main():
     ], knobs = [
         ("hue", conv_hue),
         ("hue_alpha", conv_alpha),
-        None,
-        None,
+        ("saturation", conv_saturation),
+        ("intensity", conv_intensity),
         None,
         None,
         None,
@@ -54,6 +54,11 @@ def conv_hue(value, channel):
 def conv_alpha(value, channel):
     return value / 127
 
+def conv_saturation(value, channel):
+    return value / 127
+
+def conv_intensity(value, channel):
+    return value / 127
 
 if __name__ == "__main__":
     main()
