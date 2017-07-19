@@ -89,4 +89,7 @@ class DMXOutputDevice(OutputDevice):
         for offset, lights in self._offset_lights.items():
             for i, c in enumerate(itertools.chain(*[Lights[l] for l in lights])):
                 values[i + offset] = f2b(c)
-        self._universe.send_frame(values)
+        try:
+            self._universe.send_frame(values)
+        except OSError:
+            pass
