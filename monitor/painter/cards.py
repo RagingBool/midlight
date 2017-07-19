@@ -1,26 +1,20 @@
 
 from monitor.painter.base import Painter, P
-from common.geometry.cards import E_L, E_R, E_B, T, T_L, T_T, T_R, L_1, R_1, \
+from common.geometry.cards import ES, T, T_L, T_T, T_R, L_1, R_1, \
     L_2, R_2, L_3, R_3
 
 
 TRIANGLE = [P(0,0), P(0.5, (3**0.5)/2), P(1, 0), P(0,0)]
 REV_TRIANGLE = [P(0,0), P(-0.5, (3**0.5)/2), P(0.5, (3**0.5)/2), P(0,0)]
 
-EDGES = [
-    E_L,  # edge left
-    E_R,  # edge right
-    E_B,  # edge bottom
-]
-
-ONE = dict(zip(EDGES, zip(TRIANGLE, TRIANGLE[1:])))
+ONE = {ES: tuple(TRIANGLE[:-1])}
 
 T2 = [p*2 for p in TRIANGLE]
-TWO = dict(zip(EDGES, zip(T2, T2[1:])))
+TWO = {ES: tuple(T2[:-1])}
 TWO[T] = [P(1,0) + p for p in REV_TRIANGLE]  # triangle
 
 T3 = [p*3 for p in TRIANGLE]
-THREE = dict(zip(EDGES, zip(T3, T3[1:])))
+THREE = {ES: tuple(T3[:-1])}
 THREE.update(dict(zip([
     T_L,  # triangle left
     T_T,  # triangle top
